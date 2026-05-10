@@ -14,17 +14,13 @@ export default function MetricCard({ metric, highlightCountry }: Props) {
   const range = max - min || 1;
 
   const currentValue = metric.data[highlightCountry];
-  const rank = [...COUNTRY_CODES]
-    .sort((a, b) =>
-      metric.higherIsBetter
-        ? metric.data[b] - metric.data[a]
-        : metric.data[a] - metric.data[b]
-    )
-    .indexOf(highlightCountry) + 1;
+  const worldRank = metric.worldRanks[highlightCountry];
+  const total = metric.totalCountriesRanked;
 
   const getRatingColor = () => {
-    if (rank <= 2) return 'text-emerald-600';
-    if (rank <= 4) return 'text-amber-600';
+    const ratio = worldRank / total;
+    if (ratio <= 0.25) return 'text-emerald-600';
+    if (ratio <= 0.50) return 'text-amber-600';
     return 'text-rose-600';
   };
 
@@ -42,7 +38,7 @@ export default function MetricCard({ metric, highlightCountry }: Props) {
           <p className="text-sm font-medium text-slate-800 leading-snug">{metric.name}</p>
         </div>
         <span className={`text-xs font-semibold shrink-0 ${getRatingColor()}`}>
-          {rank}位 / 8カ国
+          世界{worldRank}位 / {total}カ国中
         </span>
       </div>
 

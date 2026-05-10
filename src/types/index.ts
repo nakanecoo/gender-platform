@@ -36,6 +36,8 @@ export interface Metric {
   higherIsBetter: boolean;
   source: string;
   data: Record<CountryCode, number>;
+  worldRanks: Record<CountryCode, number>;
+  totalCountriesRanked: number;
 }
 
 export interface TrendPoint {

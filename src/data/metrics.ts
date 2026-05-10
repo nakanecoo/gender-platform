@@ -12,6 +12,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Labour Force Statistics 2024',
     data: { JP: 73, IS: 85, SE: 82, NO: 80, DE: 77, FR: 72, US: 68, KR: 64 },
+    worldRanks: { JP: 50, IS: 5, SE: 10, NO: 15, DE: 30, FR: 55, US: 70, KR: 90 },
+    totalCountriesRanked: 180,
   },
   {
     id: 'labor_m',
@@ -23,6 +25,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Labour Force Statistics 2024',
     data: { JP: 86, IS: 90, SE: 88, NO: 87, DE: 85, FR: 82, US: 78, KR: 81 },
+    worldRanks: { JP: 22, IS: 5, SE: 12, NO: 18, DE: 28, FR: 45, US: 65, KR: 50 },
+    totalCountriesRanked: 180,
   },
   {
     id: 'pay_gap',
@@ -34,6 +38,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: false,
     source: 'OECD Gender Wage Gap 2024',
     data: { JP: 22, IS: 9, SE: 12, NO: 13, DE: 18, FR: 16, US: 18, KR: 31 },
+    worldRanks: { JP: 30, IS: 2, SE: 5, NO: 6, DE: 14, FR: 10, US: 15, KR: 38 },
+    totalCountriesRanked: 38,
   },
   {
     id: 'managers_f',
@@ -45,6 +51,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'ILO Women in Business and Management 2024',
     data: { JP: 14, IS: 45, SE: 42, NO: 40, DE: 32, FR: 36, US: 41, KR: 16 },
+    worldRanks: { JP: 88, IS: 3, SE: 5, NO: 10, DE: 28, FR: 18, US: 8, KR: 80 },
+    totalCountriesRanked: 100,
   },
   {
     id: 'boards_f',
@@ -56,6 +64,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'MSCI Women on Boards 2024',
     data: { JP: 12, IS: 47, SE: 40, NO: 42, DE: 35, FR: 45, US: 30, KR: 10 },
+    worldRanks: { JP: 85, IS: 2, SE: 8, NO: 6, DE: 18, FR: 4, US: 30, KR: 90 },
+    totalCountriesRanked: 100,
   },
   {
     id: 'stem_workforce_f',
@@ -67,6 +77,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNESCO Science Report 2024',
     data: { JP: 18, IS: 35, SE: 35, NO: 33, DE: 28, FR: 32, US: 30, KR: 22 },
+    worldRanks: { JP: 80, IS: 20, SE: 18, NO: 22, DE: 38, FR: 25, US: 30, KR: 60 },
+    totalCountriesRanked: 100,
   },
 
   // ── ケアワーク・家庭 ─────────────────────────────
@@ -80,6 +92,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Family Database 2024',
     data: { JP: 17, IS: 90, SE: 88, NO: 72, DE: 36, FR: 55, US: 15, KR: 26 },
+    worldRanks: { JP: 28, IS: 1, SE: 2, NO: 5, DE: 12, FR: 8, US: 32, KR: 15 },
+    totalCountriesRanked: 40,
   },
   {
     id: 'paternity_weeks_m',
@@ -91,6 +105,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Family Database 2024',
     data: { JP: 5, IS: 17, SE: 12, NO: 15, DE: 8, FR: 4, US: 1, KR: 4 },
+    worldRanks: { JP: 18, IS: 1, SE: 5, NO: 3, DE: 10, FR: 22, US: 40, KR: 23 },
+    totalCountriesRanked: 40,
   },
   {
     id: 'maternity_weeks_f',
@@ -102,6 +118,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: false,
     source: 'OECD Family Database 2024',
     data: { JP: 58, IS: 17, SE: 24, NO: 18, DE: 47, FR: 18, US: 12, KR: 52 },
+    worldRanks: { JP: 38, IS: 8, SE: 15, NO: 10, DE: 28, FR: 9, US: 1, KR: 35 },
+    totalCountriesRanked: 40,
   },
   {
     id: 'unpaid_care_f',
@@ -113,6 +131,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: false,
     source: 'OECD Time Use Database 2024',
     data: { JP: 33, IS: 24, SE: 22, NO: 22, DE: 30, FR: 28, US: 28, KR: 35 },
+    worldRanks: { JP: 30, IS: 5, SE: 2, NO: 3, DE: 20, FR: 14, US: 15, KR: 38 },
+    totalCountriesRanked: 40,
   },
   {
     id: 'unpaid_care_m',
@@ -124,6 +144,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Time Use Database 2024',
     data: { JP: 5, IS: 18, SE: 17, NO: 17, DE: 16, FR: 14, US: 16, KR: 8 },
+    worldRanks: { JP: 40, IS: 3, SE: 5, NO: 6, DE: 8, FR: 15, US: 9, KR: 35 },
+    totalCountriesRanked: 40,
   },
   {
     id: 'childcare_rate',
@@ -135,6 +157,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'OECD Family Database 2024',
     data: { JP: 54, IS: 97, SE: 96, NO: 97, DE: 33, FR: 55, US: 65, KR: 30 },
+    worldRanks: { JP: 20, IS: 1, SE: 3, NO: 2, DE: 30, FR: 18, US: 15, KR: 35 },
+    totalCountriesRanked: 40,
   },
 
   // ── 政治参画 ─────────────────────────────────────
@@ -148,6 +172,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'IPU Parline 2024',
     data: { JP: 10, IS: 48, SE: 46, NO: 46, DE: 35, FR: 38, US: 29, KR: 19 },
+    worldRanks: { JP: 165, IS: 3, SE: 6, NO: 7, DE: 32, FR: 25, US: 60, KR: 95 },
+    totalCountriesRanked: 193,
   },
   {
     id: 'cabinet_f',
@@ -159,6 +185,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UN Women 2024',
     data: { JP: 11, IS: 50, SE: 52, NO: 45, DE: 38, FR: 45, US: 46, KR: 15 },
+    worldRanks: { JP: 155, IS: 5, SE: 2, NO: 13, DE: 28, FR: 12, US: 10, KR: 130 },
+    totalCountriesRanked: 193,
   },
   {
     id: 'female_head_years',
@@ -170,6 +198,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'Wikipedia / 各国政府資料',
     data: { JP: 0, IS: 23, SE: 1, NO: 18, DE: 16, FR: 1, US: 0, KR: 4 },
+    worldRanks: { JP: 145, IS: 5, SE: 72, NO: 8, DE: 12, FR: 70, US: 143, KR: 45 },
+    totalCountriesRanked: 193,
   },
 
   // ── 教育 ─────────────────────────────────────────
@@ -183,6 +213,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNESCO Institute for Statistics 2024',
     data: { JP: 63, IS: 72, SE: 67, NO: 69, DE: 55, FR: 62, US: 65, KR: 74 },
+    worldRanks: { JP: 45, IS: 12, SE: 25, NO: 18, DE: 75, FR: 50, US: 35, KR: 8 },
+    totalCountriesRanked: 175,
   },
   {
     id: 'tertiary_m',
@@ -194,6 +226,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNESCO Institute for Statistics 2024',
     data: { JP: 60, IS: 57, SE: 52, NO: 55, DE: 54, FR: 53, US: 58, KR: 73 },
+    worldRanks: { JP: 55, IS: 65, SE: 85, NO: 70, DE: 75, FR: 82, US: 60, KR: 15 },
+    totalCountriesRanked: 175,
   },
   {
     id: 'stem_ed_f',
@@ -205,6 +239,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNESCO Science Report 2024',
     data: { JP: 18, IS: 35, SE: 35, NO: 30, DE: 28, FR: 32, US: 30, KR: 22 },
+    worldRanks: { JP: 72, IS: 12, SE: 10, NO: 22, DE: 30, FR: 18, US: 24, KR: 50 },
+    totalCountriesRanked: 100,
   },
 
   // ── 健康・安全 ───────────────────────────────────
@@ -218,6 +254,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'WHO World Health Statistics 2024',
     data: { JP: 87.1, IS: 84.5, SE: 84.2, NO: 84.0, DE: 83.4, FR: 85.7, US: 79.3, KR: 86.1 },
+    worldRanks: { JP: 1, IS: 15, SE: 18, NO: 22, DE: 30, FR: 5, US: 60, KR: 3 },
+    totalCountriesRanked: 183,
   },
   {
     id: 'life_exp_m',
@@ -229,6 +267,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'WHO World Health Statistics 2024',
     data: { JP: 81.1, IS: 81.2, SE: 81.3, NO: 81.1, DE: 78.6, FR: 79.7, US: 74.5, KR: 80.0 },
+    worldRanks: { JP: 7, IS: 5, SE: 3, NO: 6, DE: 35, FR: 22, US: 65, KR: 18 },
+    totalCountriesRanked: 183,
   },
   {
     id: 'reproductive_rights',
@@ -240,6 +280,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNFPA State of World Population 2024（概算）',
     data: { JP: 62, IS: 90, SE: 92, NO: 88, DE: 78, FR: 80, US: 55, KR: 65 },
+    worldRanks: { JP: 65, IS: 4, SE: 2, NO: 6, DE: 22, FR: 18, US: 85, KR: 55 },
+    totalCountriesRanked: 175,
   },
   {
     id: 'dv_legal',
@@ -251,6 +293,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'World Bank Women, Business and the Law 2024（概算）',
     data: { JP: 68, IS: 88, SE: 90, NO: 92, DE: 85, FR: 83, US: 78, KR: 72 },
+    worldRanks: { JP: 65, IS: 12, SE: 8, NO: 5, DE: 18, FR: 22, US: 35, KR: 50 },
+    totalCountriesRanked: 190,
   },
 
   // ── 社会規範・制度 ───────────────────────────────
@@ -264,6 +308,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'WEF Global Gender Gap Report 2024',
     data: { JP: 0.663, IS: 0.935, SE: 0.816, NO: 0.879, DE: 0.815, FR: 0.774, US: 0.745, KR: 0.614 },
+    worldRanks: { JP: 118, IS: 1, SE: 5, NO: 2, DE: 7, FR: 15, US: 43, KR: 94 },
+    totalCountriesRanked: 146,
   },
   {
     id: 'gsni',
@@ -275,6 +321,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'UNDP Gender Social Norms Index 2023（概算）',
     data: { JP: 32, IS: 82, SE: 74, NO: 72, DE: 68, FR: 72, US: 55, KR: 28 },
+    worldRanks: { JP: 65, IS: 2, SE: 5, NO: 6, DE: 12, FR: 7, US: 28, KR: 70 },
+    totalCountriesRanked: 80,
   },
   {
     id: 'legal_score',
@@ -286,6 +334,8 @@ export const METRICS: Metric[] = [
     higherIsBetter: true,
     source: 'World Bank Women, Business and the Law 2024（概算）',
     data: { JP: 62, IS: 95, SE: 94, NO: 92, DE: 88, FR: 86, US: 78, KR: 70 },
+    worldRanks: { JP: 100, IS: 3, SE: 5, NO: 8, DE: 18, FR: 22, US: 40, KR: 65 },
+    totalCountriesRanked: 190,
   },
 ];
 
