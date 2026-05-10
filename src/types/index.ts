@@ -29,6 +29,7 @@ export interface Country {
 export interface Metric {
   id: string;
   name: string;
+  icon: string;
   category: MetricCategory;
   unit: string;
   description: string;

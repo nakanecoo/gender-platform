@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { REQUEST_COUNTRY_URL } from "@/config";
 
 const COUNTRY_GROUPS = [
   {
@@ -165,27 +164,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* データ追加リクエスト */}
-      <section className="mt-10">
-        <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="font-bold text-slate-900 mb-1">この国のデータを追加リクエスト</h3>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              掲載してほしい国・指標がある場合は GitHub Issue からリクエストしてください。
-              <br className="hidden sm:block" />
-              データが揃い次第、順次追加予定です。
-            </p>
-          </div>
-          <a
-            href={REQUEST_COUNTRY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-          >
-            リクエストする →
-          </a>
-        </div>
-      </section>
     </div>
   );
 }

@@ -37,7 +37,10 @@ export default function MetricCard({ metric, highlightCountry }: Props) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-2 mb-3">
-        <p className="text-sm font-medium text-slate-800 leading-snug">{metric.name}</p>
+        <div className="flex items-start gap-2 min-w-0">
+          <span className="text-xl leading-tight shrink-0">{metric.icon}</span>
+          <p className="text-sm font-medium text-slate-800 leading-snug">{metric.name}</p>
+        </div>
         <span className={`text-xs font-semibold shrink-0 ${getRatingColor()}`}>
           {rank}位 / 8カ国
         </span>

@@ -90,10 +90,15 @@ export default function ComparePage() {
                       : 'hover:bg-slate-50'
                   }`}
                 >
-                  <p className={`text-sm font-medium ${selectedMetric.id === metric.id ? 'text-indigo-700' : 'text-slate-800'}`}>
-                    {metric.name}
-                  </p>
-                  <p className="text-xs text-slate-400 mt-0.5">{METRIC_CATEGORIES[metric.category].label}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base shrink-0">{metric.icon}</span>
+                    <div className="min-w-0">
+                      <p className={`text-sm font-medium leading-snug ${selectedMetric.id === metric.id ? 'text-indigo-700' : 'text-slate-800'}`}>
+                        {metric.name}
+                      </p>
+                      <p className="text-xs text-slate-400 mt-0.5">{METRIC_CATEGORIES[metric.category].label}</p>
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>

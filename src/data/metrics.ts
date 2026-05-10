@@ -5,6 +5,7 @@ export const METRICS: Metric[] = [
   {
     id: 'labor_f',
     name: '女性労働参加率',
+    icon: '👩‍💼',
     category: 'economy',
     unit: '%',
     description: '15〜64歳の女性のうち、労働市場に参加している（就業中または求職中）割合。',
@@ -15,6 +16,7 @@ export const METRICS: Metric[] = [
   {
     id: 'labor_m',
     name: '男性労働参加率',
+    icon: '👨‍💼',
     category: 'economy',
     unit: '%',
     description: '15〜64歳の男性のうち、労働市場に参加している割合。',
@@ -25,6 +27,7 @@ export const METRICS: Metric[] = [
   {
     id: 'pay_gap',
     name: '男女賃金格差',
+    icon: '💴',
     category: 'economy',
     unit: '%',
     description: '同等労働における男性の賃金を基準とした女性の賃金格差（男性＝100として女性が何%低いか）。',
@@ -35,6 +38,7 @@ export const METRICS: Metric[] = [
   {
     id: 'managers_f',
     name: '女性管理職比率',
+    icon: '📊',
     category: 'economy',
     unit: '%',
     description: '管理職全体に占める女性の割合。',
@@ -45,6 +49,7 @@ export const METRICS: Metric[] = [
   {
     id: 'boards_f',
     name: '女性役員比率',
+    icon: '🏢',
     category: 'economy',
     unit: '%',
     description: '上場企業の取締役会に占める女性の割合。',
@@ -55,6 +60,7 @@ export const METRICS: Metric[] = [
   {
     id: 'stem_workforce_f',
     name: 'STEM分野の女性比率（就業者）',
+    icon: '🔬',
     category: 'economy',
     unit: '%',
     description: 'STEM（科学・技術・工学・数学）分野の就業者に占める女性の割合。',
@@ -67,6 +73,7 @@ export const METRICS: Metric[] = [
   {
     id: 'paternity_rate',
     name: '父親の育休取得率',
+    icon: '👨‍🍼',
     category: 'careWork',
     unit: '%',
     description: '子の誕生後、育児休業を取得した父親の割合。',
@@ -77,6 +84,7 @@ export const METRICS: Metric[] = [
   {
     id: 'paternity_weeks_m',
     name: '父親の育休取得期間（中央値）',
+    icon: '📅',
     category: 'careWork',
     unit: '週',
     description: '育休を取得した父親の取得期間の中央値（週数）。',
@@ -87,6 +95,7 @@ export const METRICS: Metric[] = [
   {
     id: 'maternity_weeks_f',
     name: '母親の育休取得期間（中央値）',
+    icon: '🤱',
     category: 'careWork',
     unit: '週',
     description: '育休を取得した母親の取得期間の中央値（週数）。',
@@ -97,6 +106,7 @@ export const METRICS: Metric[] = [
   {
     id: 'unpaid_care_f',
     name: '無償ケア労働時間・女性（週あたり）',
+    icon: '🏠',
     category: 'careWork',
     unit: '時間',
     description: '育児・家事・介護など無償のケア労働に女性が費やす平均時間（週あたり）。',
@@ -107,6 +117,7 @@ export const METRICS: Metric[] = [
   {
     id: 'unpaid_care_m',
     name: '無償ケア労働時間・男性（週あたり）',
+    icon: '🧸',
     category: 'careWork',
     unit: '時間',
     description: '育児・家事・介護など無償のケア労働に男性が費やす平均時間（週あたり）。',
@@ -117,6 +128,7 @@ export const METRICS: Metric[] = [
   {
     id: 'childcare_rate',
     name: '就学前保育利用率',
+    icon: '🏫',
     category: 'careWork',
     unit: '%',
     description: '3歳未満の子どもが公的または認定された保育サービスを利用している割合。',
@@ -129,6 +141,7 @@ export const METRICS: Metric[] = [
   {
     id: 'parliament_f',
     name: '国会議員に占める女性比率',
+    icon: '🏛️',
     category: 'politics',
     unit: '%',
     description: '下院（または一院制議会）の議員に占める女性の割合。',
@@ -139,6 +152,7 @@ export const METRICS: Metric[] = [
   {
     id: 'cabinet_f',
     name: '閣僚に占める女性比率',
+    icon: '🤝',
     category: 'politics',
     unit: '%',
     description: '内閣（閣僚ポスト）に占める女性の割合。',
@@ -149,6 +163,7 @@ export const METRICS: Metric[] = [
   {
     id: 'female_head_years',
     name: '女性国家元首・首相の在任年数（過去50年）',
+    icon: '👑',
     category: 'politics',
     unit: '年',
     description: '1974〜2024年の間に女性が国家元首または首相として在任していた年数の合計。',
@@ -161,6 +176,7 @@ export const METRICS: Metric[] = [
   {
     id: 'tertiary_f',
     name: '高等教育進学率・女性',
+    icon: '👩‍🎓',
     category: 'education',
     unit: '%',
     description: '当該年齢層の女性のうち、高等教育機関（大学・短大等）に進学している割合。',
@@ -171,6 +187,7 @@ export const METRICS: Metric[] = [
   {
     id: 'tertiary_m',
     name: '高等教育進学率・男性',
+    icon: '👨‍🎓',
     category: 'education',
     unit: '%',
     description: '当該年齢層の男性のうち、高等教育機関に進学している割合。',
@@ -181,6 +198,7 @@ export const METRICS: Metric[] = [
   {
     id: 'stem_ed_f',
     name: 'STEM系学部の女性比率',
+    icon: '🧪',
     category: 'education',
     unit: '%',
     description: '理工系（STEM）学部の在学生に占める女性の割合。',
@@ -193,6 +211,7 @@ export const METRICS: Metric[] = [
   {
     id: 'life_exp_f',
     name: '平均寿命・女性',
+    icon: '❤️',
     category: 'health',
     unit: '歳',
     description: '女性の出生時平均余命。',
@@ -203,6 +222,7 @@ export const METRICS: Metric[] = [
   {
     id: 'life_exp_m',
     name: '平均寿命・男性',
+    icon: '💙',
     category: 'health',
     unit: '歳',
     description: '男性の出生時平均余命。',
@@ -213,6 +233,7 @@ export const METRICS: Metric[] = [
   {
     id: 'reproductive_rights',
     name: '性・生殖に関する権利スコア',
+    icon: '🏥',
     category: 'health',
     unit: '点',
     description: '避妊へのアクセス・中絶の合法性・性教育の充実度などを総合した指数（0〜100点）。',
@@ -223,6 +244,7 @@ export const METRICS: Metric[] = [
   {
     id: 'dv_legal',
     name: 'DV・性暴力の法的整備スコア',
+    icon: '⚖️',
     category: 'health',
     unit: '点',
     description: 'DV禁止法・ストーカー規制・性暴力に関する法整備の充実度（0〜100点）。',
@@ -235,6 +257,7 @@ export const METRICS: Metric[] = [
   {
     id: 'ggi_score',
     name: 'ジェンダーギャップ指数（WEF）',
+    icon: '🌍',
     category: 'norms',
     unit: '',
     description: '経済参画・教育・健康・政治参画の4分野を統合した指数（0〜1、1＝完全平等）。',
@@ -245,6 +268,7 @@ export const METRICS: Metric[] = [
   {
     id: 'gsni',
     name: '社会的規範：偏見のない人の割合',
+    icon: '🧠',
     category: 'norms',
     unit: '%',
     description: 'UNDPのジェンダー社会規範指数をもとに、ジェンダー偏見をまったく持たない人の割合（高いほど平等意識が高い）。',
@@ -255,6 +279,7 @@ export const METRICS: Metric[] = [
   {
     id: 'legal_score',
     name: '法整備スコア（育休・賃金・雇用）',
+    icon: '📜',
     category: 'norms',
     unit: '点',
     description: '育休法・同一賃金法・雇用差別禁止法などジェンダー平等関連法の整備状況（0〜100点）。',
