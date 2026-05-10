@@ -60,6 +60,13 @@ export interface BeforeAfterValue {
   unit: string;
 }
 
+export interface PhaseConfig {
+  id: string;
+  label: string;
+  yearRange: string;
+  description: string;
+}
+
 export interface Policy {
   id: string;
   country: CountryCode;
@@ -67,6 +74,10 @@ export interface Policy {
   title: string;
   description: string;
   category: string;
+  phase: string;
+  background?: string;
+  limitation?: string;
+  nextStep?: string;
   impact?: BeforeAfterValue;
   effectRating: EffectRating;
   referencedBy?: CountryCode[];

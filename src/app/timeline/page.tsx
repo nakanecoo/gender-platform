@@ -2,39 +2,56 @@
 
 import { useState } from 'react';
 import { COUNTRIES, COUNTRY_CODES } from '@/data/countries';
-import { getPoliciesByCountry } from '@/data/policies';
+import { getPoliciesByCountry, PHASES_BY_COUNTRY } from '@/data/policies';
 import { CountryCode } from '@/types';
 import TimelineCard from '@/components/TimelineCard';
 
-const CATEGORY_FILTERS = ['すべて', '育休', '役員', '賃金', '雇用', '政策', '社会運動'];
+const PHASE_STYLES: Record<string, {
+  band: string;
+  text: string;
+  subText: string;
+  dot: string;
+  line: string;
+  bg: string;
+  border: string;
+  icon: string;
+}> = {
+  '問題提起期':    { band: 'bg-amber-500',   text: 'text-white', subText: 'text-amber-100', dot: '#d97706', line: '#d97706', bg: 'bg-amber-50',   border: 'border-amber-200',   icon: '💬' },
+  '法整備期':      { band: 'bg-blue-500',    text: 'text-white', subText: 'text-blue-100',  dot: '#3b82f6', line: '#3b82f6', bg: 'bg-blue-50',    border: 'border-blue-200',    icon: '📜' },
+  '制度設計期':    { band: 'bg-blue-500',    text: 'text-white', subText: 'text-blue-100',  dot: '#3b82f6', line: '#3b82f6', bg: 'bg-blue-50',    border: 'border-blue-200',    icon: '🔧' },
+  'クォータ導入期':{ band: 'bg-indigo-500',  text: 'text-white', subText: 'text-indigo-100',dot: '#6366f1', line: '#6366f1', bg: 'bg-indigo-50',  border: 'border-indigo-200',  icon: '⚡' },
+  '数値目標期':    { band: 'bg-purple-500',  text: 'text-white', subText: 'text-purple-100',dot: '#8b5cf6', line: '#8b5cf6', bg: 'bg-purple-50',  border: 'border-purple-200',  icon: '🎯' },
+  '開示・透明化期':{ band: 'bg-emerald-500', text: 'text-white', subText: 'text-emerald-100',dot: '#10b981',line: '#10b981', bg: 'bg-emerald-50', border: 'border-emerald-200', icon: '🔍' },
+  '開示・義務化期':{ band: 'bg-emerald-500', text: 'text-white', subText: 'text-emerald-100',dot: '#10b981',line: '#10b981', bg: 'bg-emerald-50', border: 'border-emerald-200', icon: '✅' },
+  '定着・強化期':  { band: 'bg-teal-500',   text: 'text-white', subText: 'text-teal-100',  dot: '#14b8a6', line: '#14b8a6', bg: 'bg-teal-50',    border: 'border-teal-200',    icon: '🌱' },
+};
+
+const DEFAULT_STYLE = PHASE_STYLES['法整備期'];
 
 export default function TimelinePage() {
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>('JP');
-  const [categoryFilter, setCategoryFilter] = useState('すべて');
+  const [expandedPhase, setExpandedPhase] = useState<string | null>(null);
 
   const policies = getPoliciesByCountry(selectedCountry);
-  const filtered =
-    categoryFilter === 'すべて' ? policies : policies.filter((p) => p.category === categoryFilter);
-
+  const phases = PHASES_BY_COUNTRY[selectedCountry] ?? [];
   const country = COUNTRIES[selectedCountry];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-slate-900 mb-1">政策タイムライン</h1>
       <p className="text-slate-500 text-sm mb-6">
-        各国が取ってきた施策の歴史を時系列で確認できます。
-        「🇯🇵 この施策を日本に適用したら？」ボタンで日本への示唆を確認できます。
+        各国の政策の歴史を「時代フェーズ」ごとに整理。フェーズ帯をクリックすると時代背景、各カードをクリックすると詳細が開きます。
       </p>
 
       {/* 国選択 */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-8">
         {COUNTRY_CODES.map((code) => {
           const c = COUNTRIES[code];
           const count = getPoliciesByCountry(code).length;
           return (
             <button
               key={code}
-              onClick={() => setSelectedCountry(code)}
+              onClick={() => { setSelectedCountry(code); setExpandedPhase(null); }}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-2 text-sm font-medium transition-all ${
                 selectedCountry === code
                   ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
@@ -50,39 +67,77 @@ export default function TimelinePage() {
         })}
       </div>
 
-      {/* カテゴリフィルター */}
-      <div className="flex flex-wrap gap-1.5 mb-8">
-        {CATEGORY_FILTERS.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategoryFilter(cat)}
-            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-              categoryFilter === cat
-                ? 'bg-slate-800 text-white border-slate-800'
-                : 'border-slate-200 text-slate-600 hover:border-slate-400'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* タイムライン */}
-      <div className="mb-4 flex items-center gap-3">
+      {/* タイムライン見出し */}
+      <div className="flex items-center gap-3 mb-6">
         <span className="text-2xl">{country.flag}</span>
         <h2 className="text-lg font-bold text-slate-800">{country.name}の政策タイムライン</h2>
-        <span className="text-sm text-slate-400">{filtered.length}件</span>
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="text-center py-12 text-slate-400">
-          <p>該当する施策がありません</p>
+      {phases.length === 0 ? (
+        <div className="text-center py-16 text-slate-400">
+          <p className="text-4xl mb-3">📭</p>
+          <p>このページにはまだ政策データがありません</p>
         </div>
       ) : (
         <div>
-          {filtered.map((policy) => (
-            <TimelineCard key={policy.id} policy={policy} />
-          ))}
+          {phases.map((phase) => {
+            const phasePolicies = policies.filter((p) => p.phase === phase.id);
+            const style = PHASE_STYLES[phase.id] ?? DEFAULT_STYLE;
+            const isExpanded = expandedPhase === phase.id;
+
+            return (
+              <div key={phase.id} className="mb-2">
+                {/* フェーズ帯ヘッダー */}
+                <button
+                  onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
+                  className={`w-full text-left ${style.band} rounded-xl px-5 py-3 mb-4 transition-opacity hover:opacity-90`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xl">{style.icon}</span>
+                      <div>
+                        <span className={`font-bold text-base ${style.text}`}>{phase.label}</span>
+                        <span className={`ml-3 text-sm ${style.subText}`}>{phase.yearRange}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`text-xs ${style.subText}`}>
+                        {phasePolicies.length}件の政策
+                      </span>
+                      <span className={`text-sm ${style.subText}`}>
+                        {isExpanded ? '▲ 時代背景を閉じる' : '▼ 時代背景を読む'}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+
+                {/* 時代背景（展開） */}
+                {isExpanded && (
+                  <div className={`${style.bg} ${style.border} border rounded-xl p-4 mb-4 -mt-2`}>
+                    <p className="text-sm text-slate-700 leading-relaxed">{phase.description}</p>
+                  </div>
+                )}
+
+                {/* そのフェーズの政策一覧 */}
+                {phasePolicies.length > 0 ? (
+                  <div className="pl-2">
+                    {phasePolicies.map((policy) => (
+                      <TimelineCard
+                        key={policy.id}
+                        policy={policy}
+                        lineColor={style.line}
+                        dotColor={style.dot}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className={`${style.bg} rounded-xl p-4 mb-4 text-sm text-slate-500 text-center`}>
+                    このフェーズの政策データは準備中です
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
