@@ -64,28 +64,83 @@ function PerspectiveSwitcher({ active, onChange }: { active: Perspective; onChan
 
 /* ─── Personal section ─── */
 
-function PersonalSection() {
+const CHECK_ITEMS = [
+  '会議で女性の発言が男性より早く遮られていないか確認している',
+  '育休取得を「自分には関係ない」と思わず、制度を調べたことがある',
+  '家事・育児の担当を相手と定期的に話し合っている',
+  '職場で感情的になった女性を「ヒステリック」と思ったことがない',
+  '困ったとき、誰かに助けを求めることができている',
+];
+
+const CHECK_REASONS = [
+  '女性の発言は会議で平均2.5倍遮られやすいという研究があります（HBR 2014）。意識的に注目することが第一歩です。',
+  '男性が育休を取得した家庭では、5年後の家事分担が均等化する傾向があります（OECD 2021）。まず制度を知ることが行動につながります。',
+  '担当の「見える化」と定期的な対話があると、無意識の負担偏在に気づきやすくなります（内閣府2022年調査）。',
+  '同じ感情表現でも女性は「感情的」・男性は「情熱的」と評価される傾向が複数の研究で示されています。気づきがバイアスを減らします。',
+  '助けを求められる人は燃え尽き症候群のリスクが40%低いとされています（WHO 2022）。「強がらない」ことは自分と周囲を守るスキルです。',
+];
+
+const CHECK_FEEDBACK = [
+  'まだどれもチェックしていません。まず一つから始めてみましょう。',
+  '一つ意識できています。あと4つ、少しずつ取り組んでみましょう。',
+  '着実に増えています。あと3つでさらに意識が高まります。',
+  '半分以上できています。あと2つでグレードアップです。',
+  'もう一歩！最後の一項目にチャレンジしてみましょう。',
+  '素晴らしい意識です。次は周囲への働きかけを考えてみましょう。',
+];
+
+function RatioCompareChart({ ratio }: { ratio: number }) {
+  const capped = Math.min(ratio, 10);
+  const benchmarks = [
+    { label: 'あなたの家庭', value: capped, color: capped > 5 ? '#ef4444' : capped > 2 ? '#f59e0b' : '#10b981', bold: true },
+    { label: '日本平均', value: 5.5, color: '#6366f1', bold: false },
+    { label: 'OECD平均', value: 2.0, color: '#64748b', bold: false },
+    { label: '北欧平均', value: 1.2, color: '#10b981', bold: false },
+  ];
+  const maxVal = Math.max(capped + 1, 7);
+  const W = 380, barH = 22, gap = 8, padL = 88, padR = 55, padT = 4;
+  const H = benchmarks.length * (barH + gap) + padT;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ maxHeight: 160 }}>
+      {benchmarks.map((b, i) => {
+        const y = padT + i * (barH + gap);
+        const bw = Math.max((b.value / maxVal) * (W - padL - padR), 6);
+        const label = b.value >= 10 ? '10倍以上' : `${b.value.toFixed(1)}倍`;
+        return (
+          <g key={b.label}>
+            <text x={padL - 4} y={y + barH / 2 + 4} textAnchor="end" fontSize="10"
+              fill={b.bold ? '#1e40af' : '#64748b'} fontWeight={b.bold ? '700' : '400'}>
+              {b.label}
+            </text>
+            <rect x={padL} y={y} width={bw} height={barH} rx="3" fill={b.color} opacity={b.bold ? 1 : 0.55} />
+            <text x={padL + bw + 4} y={y + barH / 2 + 4} fontSize="10" fill="#475569">{label}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function PersonalSection({ onPerspective }: { onPerspective: (p: Perspective) => void }) {
   const [womanH, setWomanH] = useState('');
   const [manH, setManH] = useState('');
   const [checklist, setChecklist] = useState<Record<number, boolean>>({});
-  const [showResources, setShowResources] = useState(false);
-
-  const oecd_w = 26; // OECD Japan avg women weekly unpaid hours
-  const oecd_m = 5;
+  const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
 
   const womanNum = parseFloat(womanH) || 0;
-  const manNum = parseFloat(manH) || 0;
-  const total = womanNum + manNum;
-  const womanPct = total > 0 ? Math.round((womanNum / total) * 100) : 0;
+  const manNum   = parseFloat(manH)   || 0;
   const hasResult = womanH !== '' && manH !== '';
+  const ratio = manNum > 0 ? womanNum / manNum : womanNum > 0 ? 99 : 0;
+  const ratioLabel = ratio === 99 ? '∞（男性が0時間）' : ratio === 0 ? '—' : `${ratio.toFixed(1)}倍`;
 
-  const checkItems = [
-    '会議で女性の発言が男性より早く遮られていないか確認している',
-    '育休取得を「自分には関係ない」と思わず、制度を調べたことがある',
-    '家事・育児の担当を相手と定期的に話し合っている',
-    '職場で感情的になった女性を「ヒステリック」と思ったことがない',
-    '困ったとき、誰かに助けを求めることができている',
-  ];
+  const getComment = () => {
+    if (!hasResult || ratio === 0) return '';
+    if (ratio === 99 || ratio >= 5.0) return '日本平均（5.5倍）と同水準か、それ以上の格差がある状態です。ケアの負担偏在が大きいといえます。';
+    if (ratio >= 2.5) return '日本平均（5.5倍）より小さいですが、OECD平均（約2倍）を上回っています。さらなる均等化が改善につながります。';
+    if (ratio >= 1.5) return 'OECD平均（約2倍）に近い水準です。引き続き意識的な分担を続けましょう。';
+    return '北欧平均（約1.2倍）に近い、比較的バランスのとれた状態です。この状態を維持することが重要です。';
+  };
 
   const checkedCount = Object.values(checklist).filter(Boolean).length;
 
@@ -97,9 +152,10 @@ function PersonalSection() {
 
   return (
     <div>
+      {/* Section 1: Care labor check */}
       <SectionCard title="セクション1：自分の状況を知る" color="border-indigo-200">
         <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-          あなたの家庭のケア労働時間は、OECD平均と比べてどうでしょうか？
+          あなたの家庭のケア労働時間を入力すると、OECD平均・日本平均・北欧平均と比較できます。
           日本では女性が週平均約26時間、男性は約5時間の無償ケア労働を担っています。
         </p>
         <div className="grid grid-cols-2 gap-3 mb-4">
@@ -107,78 +163,64 @@ function PersonalSection() {
             <label className="block text-xs font-semibold text-slate-600 mb-1">
               女性の家事・育児・介護時間（週・時間）
             </label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={womanH}
+            <input type="number" min="0" max="100" value={womanH}
               onChange={(e) => setWomanH(e.target.value)}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
-              placeholder="例：20"
-            />
+              placeholder="例：20" />
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-600 mb-1">
               男性の家事・育児・介護時間（週・時間）
             </label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={manH}
+            <input type="number" min="0" max="100" value={manH}
               onChange={(e) => setManH(e.target.value)}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400"
-              placeholder="例：5"
-            />
+              placeholder="例：5" />
           </div>
         </div>
 
-        {hasResult && (
-          <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
-            <p className="text-sm font-semibold text-indigo-800 mb-2">あなたの家庭の状況</p>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex-1 bg-white rounded-full h-4 border border-indigo-200 overflow-hidden">
-                <div
-                  className="h-full bg-rose-400 transition-all"
-                  style={{ width: `${womanPct}%` }}
-                />
-              </div>
-              <span className="text-xs text-slate-600 whitespace-nowrap">女性{womanPct}% / 男性{100 - womanPct}%</span>
+        {hasResult && ratio !== 0 && (
+          <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200 space-y-3">
+            {/* Ratio headline */}
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-indigo-700">{ratioLabel}</span>
+              <span className="text-sm text-indigo-600">があなたの家庭の男女比です</span>
             </div>
-            {womanPct > 75 && (
-              <p className="text-xs text-rose-700 leading-relaxed">
-                女性の負担が大きい状態です。日本の平均（女性84.6%）に近い水準です。
-                この状態が続くと、女性のキャリアや健康に影響が出やすくなります。
-              </p>
-            )}
-            {womanPct >= 50 && womanPct <= 75 && (
-              <p className="text-xs text-amber-700 leading-relaxed">
-                女性の負担がやや多い状態です。日本平均（84.6%）より改善されていますが、
-                北欧の平均（55〜65%）にはまだ差があります。
-              </p>
-            )}
-            {womanPct < 50 && (
-              <p className="text-xs text-emerald-700 leading-relaxed">
-                比較的バランスのとれた分担です。北欧諸国の平均に近い水準です。
-                この状態を維持・改善していくことが重要です。
-              </p>
-            )}
-            <div className="mt-2 text-xs text-slate-500 flex gap-4">
-              <span>OECD日本平均：女性{oecd_w}時間・男性{oecd_m}時間（週）</span>
+
+            {/* Comparison chart */}
+            <RatioCompareChart ratio={ratio === 99 ? 10 : ratio} />
+
+            {/* What it means */}
+            <div className={`rounded-lg px-3 py-2 text-xs font-semibold leading-relaxed ${
+              ratio >= 5 ? 'bg-red-100 text-red-700' :
+              ratio >= 2.5 ? 'bg-amber-100 text-amber-700' :
+              ratio >= 1.5 ? 'bg-blue-100 text-blue-700' :
+              'bg-emerald-100 text-emerald-700'
+            }`}>
+              {getComment()}
             </div>
+
+            {/* Next action button */}
+            <button
+              onClick={() => document.getElementById('checklist-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors"
+            >
+              次にできること を見る ▼
+            </button>
           </div>
         )}
         <Src>OECD生活時間調査2020、内閣府男女共同参画局</Src>
       </SectionCard>
 
+      {/* Section 2: Workplace */}
       <SectionCard title="セクション2：職場・日常でできること" color="border-indigo-200">
         <div className="mb-6">
           <p className="text-sm font-semibold text-slate-700 mb-3">育休を取りやすくするための会話例</p>
           <div className="space-y-3">
             {[
-              { situation: '上司に育休を申請するとき', example: '「来年〇月に子どもが生まれます。育児休業を〇か月取得したいのですが、業務の引き継ぎについて相談させてください。」' },
-              { situation: 'パートナーに家事分担を提案するとき', example: '「今の分担だとあなたの負担が大きいと思う。週1回、家事の担当を一緒に確認する時間を作れないかな？」' },
-              { situation: '職場の雰囲気が育休を取りにくいとき', example: '「育休の取得率をチームとして上げていきたいと思っています。私が取得することで、後に続く人が取りやすくなれば、と考えています。」' },
+              { situation: '上司に育休を申請するとき', example: '来年〇月に子どもが生まれます。育児休業を〇か月取得したいのですが、業務の引き継ぎについて相談させてください。' },
+              { situation: 'パートナーに家事分担を提案するとき', example: '今の分担だとあなたの負担が大きいと思う。週1回、家事の担当を一緒に確認する時間を作れないかな？' },
+              { situation: '職場の雰囲気が取りにくいとき', example: '育休の取得率をチームとして上げていきたいと思っています。私が取得することで、後に続く人が取りやすくなれば、と考えています。' },
             ].map((item) => (
               <div key={item.situation} className="bg-slate-50 rounded-xl p-4 border border-slate-200">
                 <p className="text-xs font-semibold text-slate-500 mb-1">{item.situation}</p>
@@ -188,27 +230,70 @@ function PersonalSection() {
           </div>
         </div>
 
-        <div className="mb-6">
-          <p className="text-sm font-semibold text-slate-700 mb-3">
-            「気づきやすいバイアス」チェックリスト
-            <span className="text-xs font-normal text-slate-400 ml-2">（{checkedCount}/5 チェック済み）</span>
-          </p>
+        {/* Checklist */}
+        <div id="checklist-section" className="mb-4">
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <p className="text-sm font-semibold text-slate-700">「気づきやすいバイアス」チェックリスト</p>
+            <span className="text-xs text-slate-400">{checkedCount}/5 チェック済み</span>
+          </div>
+
+          {/* Feedback banner */}
+          {checkedCount > 0 && (
+            <div className={`mb-3 rounded-xl p-3 text-xs font-semibold leading-relaxed ${
+              checkedCount === 5 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+              checkedCount >= 3 ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+              'bg-amber-50 text-amber-700 border border-amber-200'
+            }`}>
+              {CHECK_FEEDBACK[checkedCount]}
+            </div>
+          )}
+
           <div className="space-y-2">
-            {checkItems.map((item, i) => (
-              <label key={i} className="flex items-start gap-3 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={checklist[i] ?? false}
-                  onChange={(e) => setChecklist(prev => ({ ...prev, [i]: e.target.checked }))}
-                  className="mt-0.5 w-4 h-4 accent-indigo-600 shrink-0"
-                />
-                <span className={`text-sm leading-relaxed ${checklist[i] ? 'text-slate-400 line-through' : 'text-slate-700'}`}>{item}</span>
-              </label>
+            {CHECK_ITEMS.map((item, i) => (
+              <div key={i} className="border border-slate-200 rounded-xl overflow-hidden">
+                <div className="flex items-center gap-3 p-3">
+                  <input type="checkbox" checked={checklist[i] ?? false}
+                    onChange={(e) => setChecklist(prev => ({ ...prev, [i]: e.target.checked }))}
+                    className="w-4 h-4 accent-indigo-600 shrink-0 cursor-pointer" />
+                  <span className={`text-sm leading-relaxed flex-1 ${checklist[i] ? 'text-slate-400 line-through' : 'text-slate-700'}`}>
+                    {item}
+                  </span>
+                  {!checklist[i] && (
+                    <button
+                      onClick={() => setExpandedItems(prev => ({ ...prev, [i]: !prev[i] }))}
+                      className="text-xs text-slate-400 hover:text-indigo-500 shrink-0 px-2 py-1 rounded border border-slate-200 hover:border-indigo-300 transition-colors"
+                    >
+                      {expandedItems[i] ? '閉じる' : 'なぜ？'}
+                    </button>
+                  )}
+                </div>
+                {!checklist[i] && expandedItems[i] && (
+                  <div className="px-4 pb-3 pt-1 bg-slate-50 border-t border-slate-100 text-xs text-slate-600 leading-relaxed">
+                    {CHECK_REASONS[i]}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-          {checkedCount === 5 && (
-            <div className="mt-3 bg-emerald-50 rounded-xl p-3 border border-emerald-200 text-xs text-emerald-800">
-              すべてチェックできました。小さな気づきの積み重ねが職場文化を変えます。
+
+          {/* Next step cards (visible after any check) */}
+          {checkedCount > 0 && (
+            <div className="mt-4 bg-emerald-50 rounded-xl p-4 border border-emerald-200">
+              <p className="text-xs font-semibold text-emerald-800 mb-3">次のステップ</p>
+              <div className="space-y-2">
+                {[
+                  { label: '会社・組織としての取り組みを見る', action: () => onPerspective('org'), emoji: '🏢' },
+                  { label: '政策レベルで何が変わるかを確認する', action: () => onPerspective('policy'), emoji: '📜' },
+                  { label: 'よくある疑問への回答を読む', action: () => onPerspective('unsure'), emoji: '🤔' },
+                ].map((step) => (
+                  <button key={step.label} onClick={step.action}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 bg-white rounded-lg border border-emerald-200 text-sm text-emerald-800 hover:bg-emerald-100 transition-colors text-left">
+                    <span>{step.emoji}</span>
+                    <span className="flex-1">{step.label}</span>
+                    <span className="text-emerald-400">→</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -219,11 +304,11 @@ function PersonalSection() {
             「男性は助けを求めるべきではない」という規範が、男性の孤立・メンタルヘルス問題・
             自殺率の高さに直結しています（日本男性の自殺死亡率は女性の約2.2倍）。
             助けを求めることは弱さではなく、自分と周囲を守るスキルです。
-            困ったとき、まず身近な人に「少し話してもいいか」と声をかけることから始められます。
           </p>
         </div>
       </SectionCard>
 
+      {/* Section 3: Resources */}
       <SectionCard title="セクション3：学ぶ・つながる" color="border-indigo-200">
         <div className="space-y-4">
           {RESOURCES.map((cat) => (
@@ -640,7 +725,7 @@ export default function ActionPage() {
   const [perspective, setPerspective] = useState<Perspective>('personal');
 
   const CONTENT: Record<Perspective, React.ReactNode> = {
-    personal: <PersonalSection />,
+    personal: <PersonalSection onPerspective={setPerspective} />,
     org:      <OrgSection />,
     policy:   <PolicySection />,
     unsure:   <UnsureSection />,

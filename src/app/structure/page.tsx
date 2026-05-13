@@ -45,16 +45,17 @@ function Stat({ label, value, sub, variant = 'confirmed' }: {
   label: string; value: string; sub?: string;
   variant?: 'confirmed' | 'hypothesis' | 'research';
 }) {
-  const styles = {
-    confirmed: 'bg-blue-50 border-blue-100 text-blue-700',
-    hypothesis: 'bg-slate-50 border-slate-200 border-dashed text-slate-500',
-    research: 'bg-orange-50 border-orange-200 text-orange-600',
-  } as const;
+  const configs = {
+    confirmed:  { bg: 'bg-blue-50 border-blue-200', textColor: 'text-blue-700',   inlineStyle: { borderLeftWidth: '4px', borderLeftColor: '#3b82f6' } },
+    hypothesis: { bg: 'bg-slate-50 border-slate-200', textColor: 'text-slate-500', inlineStyle: { borderStyle: 'dashed' as const } },
+    research:   { bg: 'bg-orange-50 border-orange-200', textColor: 'text-orange-600', inlineStyle: {} },
+  };
   const badgeLabel = { confirmed: null, hypothesis: '仮説', research: '研究中' } as const;
+  const cfg = configs[variant];
   return (
-    <div className={`rounded-xl p-3 border ${styles[variant]}`}>
+    <div className={`rounded-xl p-3 border ${cfg.bg}`} style={cfg.inlineStyle}>
       <p className="text-xs text-slate-500 mb-1 leading-tight">{label}</p>
-      <p className={`text-xl font-bold ${styles[variant].split(' ')[2]}`}>{value}</p>
+      <p className={`text-xl font-bold ${cfg.textColor}`}>{value}</p>
       {sub && <p className="text-xs text-slate-400 mt-1">{sub}</p>}
       {badgeLabel[variant] && (
         <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 border border-orange-200">
@@ -524,17 +525,31 @@ export default function StructurePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
           <p className="text-xs font-bold text-rose-700 mb-3">シングルマザー（日本）</p>
-          {[['世帯数', '約119.5万世帯'], ['貧困率', '51.4%'], ['就業率', '86.6%（OECD平均71.2%超）'], ['平均就労年収', '236万円'], ['養育費受取', '28.1%のみ']].map(([k,v]) => (
-            <div key={k} className="flex justify-between text-xs mb-1">
-              <span className="text-slate-500">{k}</span><span className="font-semibold text-slate-700">{v}</span>
+          {[
+            ['世帯数',   '約119.5万世帯'],
+            ['貧困率',   '51.4%'],
+            ['就業率',   '86.6%（OECD平均71.2%超）'],
+            ['平均年収', '236万円'],
+            ['主な課題', '養育費未払い・非正規雇用への固定'],
+          ].map(([k, v]) => (
+            <div key={k} className="flex justify-between text-xs mb-1 gap-2">
+              <span className="text-slate-500 shrink-0">{k}</span>
+              <span className="font-semibold text-slate-700 text-right">{v}</span>
             </div>
           ))}
         </div>
         <div className="rounded-xl border border-sky-200 bg-sky-50 p-4">
           <p className="text-xs font-bold text-sky-700 mb-3">シングルファザー（日本）</p>
-          {[['世帯数', '約14.9万世帯（母子の約1/8）'], ['正規雇用割合', '69.9%'], ['平均年収', '496万円（母子の約2倍）'], ['主な課題', '感情的サポート・支援窓口不足']].map(([k,v]) => (
-            <div key={k} className="flex justify-between text-xs mb-1">
-              <span className="text-slate-500">{k}</span><span className="font-semibold text-slate-700">{v}</span>
+          {[
+            ['世帯数',   '約14.9万世帯（母子の約1/8）'],
+            ['貧困率',   'データ限定的（厚労省調査での対象が限定的）'],
+            ['就業率',   '88.8%（厚労省令和3年度調査）'],
+            ['平均年収', '496万円（母子の約2倍）'],
+            ['主な課題', '感情的サポート・支援窓口不足'],
+          ].map(([k, v]) => (
+            <div key={k} className="flex justify-between text-xs mb-1 gap-2">
+              <span className="text-slate-500 shrink-0">{k}</span>
+              <span className="font-semibold text-slate-700 text-right">{v}</span>
             </div>
           ))}
         </div>
@@ -651,11 +666,11 @@ export default function StructurePage() {
       </div>
 
       {/* Topics */}
-      <TopicSection no={1} title="女性へのケア労働の偏重" color="bg-rose-600"
+      <TopicSection no={1} title="女性へのケア労働の偏重" color="bg-blue-600"
         tab={tab1} onTab={setTab1} data={t1Data} why={t1Why} solution={t1Solution} />
-      <TopicSection no={2} title="男性のケア不足と孤立" color="bg-sky-600"
+      <TopicSection no={2} title="男性のケア不足と孤立" color="bg-violet-600"
         tab={tab2} onTab={setTab2} data={t2Data} why={t2Why} solution={t2Solution} />
-      <TopicSection no={3} title="ひとり親の実態（母子・父子）" color="bg-amber-600"
+      <TopicSection no={3} title="ひとり親の実態（母子・父子）" color="bg-orange-500"
         tab={tab3} onTab={setTab3} data={t3Data} why={t3Why} solution={t3Solution} />
       <TopicSection no={4} title="DV・暴力（男女両方の被害）" color="bg-red-600"
         tab={tab4} onTab={setTab4} data={t4Data} why={t4Why} solution={t4Solution} />
