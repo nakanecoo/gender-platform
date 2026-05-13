@@ -454,88 +454,90 @@ const COUNTRY_LABEL: Record<string, string> = {
 };
 
 const POLICY_MATRIX = [
-  { label: '父親\nクォータ制', country: 'IS', effectRow: 0, easeCol: 1, color: '#6366f1',
+  { label: '父親クォータ制', country: 'IS', effectRow: 0, easeCol: 1, color: '#6366f1',
     cite: 'Nordic Council of Ministers, 2025' },
-  { label: '同一賃金\n認証制度', country: 'IS', effectRow: 0, easeCol: 2, color: '#6366f1',
+  { label: '同一賃金認証制度', country: 'IS', effectRow: 0, easeCol: 2, color: '#6366f1',
     cite: 'ILO, Equal Pay Laws, 2022' },
-  { label: '無償保育\n制度拡充', country: 'Nordic', effectRow: 0, easeCol: 2, color: '#10b981',
+  { label: '無償保育制度の拡充', country: 'Nordic', effectRow: 0, easeCol: 2, color: '#10b981',
     cite: 'OECD Family Database, 2023' },
-  { label: '養育費\n強制徴収制度', country: 'DE', effectRow: 0, easeCol: 1, color: '#64748b',
+  { label: '養育費強制徴収制度', country: 'DE', effectRow: 0, easeCol: 1, color: '#64748b',
     cite: 'OECD Family Database, 2023' },
-  { label: '育休取得率\n開示義務化', country: 'JP', effectRow: 1, easeCol: 0, color: '#f59e0b',
+  { label: '育休取得率開示義務化', country: 'JP', effectRow: 1, easeCol: 0, color: '#f59e0b',
     cite: '厚生労働省, 2023' },
-  { label: 'メンター\n制度', country: '—', effectRow: 1, easeCol: 1, color: '#94a3b8',
+  { label: 'メンター制度', country: '—', effectRow: 1, easeCol: 1, color: '#94a3b8',
     cite: 'ILO, 2019' },
-  { label: '無意識\nバイアス研修', country: '—', effectRow: 2, easeCol: 0, color: '#94a3b8',
+  { label: '無意識バイアス研修', country: '—', effectRow: 2, easeCol: 0, color: '#94a3b8',
     cite: 'Equality and Human Rights Commission, 2018' },
 ];
-
-const SVG_FONT = "'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif";
 
 function PolicyMatrixChart() {
   const ROWS = ['効果：大', '効果：中', '効果：小'];
   const COLS = ['実施しやすい', '中程度', '実施困難'];
-  const cellW = 160, cellH = 100;
-  const padL = 72, padT = 36;
-  const W = padL + cellW * 3 + 10;
-  const H = padT + cellH * 3 + 10;
+
+  const cells: Record<string, typeof POLICY_MATRIX[number][]> = {};
+  POLICY_MATRIX.forEach(p => {
+    const key = `${p.effectRow}-${p.easeCol}`;
+    if (!cells[key]) cells[key] = [];
+    cells[key].push(p);
+  });
 
   return (
     <div>
+      {/* Matrix – HTML table (SVGは日本語フォントの文字化けが発生するため使用しない) */}
       <div className="overflow-x-auto">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 420, maxHeight: 380, fontFamily: SVG_FONT }}>
-          {/* Column headers */}
-          {COLS.map((col, ci) => (
-            <text key={col} x={padL + cellW * ci + cellW / 2} y={20} textAnchor="middle" fontSize="10" fill="#64748b" fontWeight="600">
-              {col}
-            </text>
-          ))}
-          {/* Row headers */}
-          {ROWS.map((row, ri) => (
-            <text key={row} x={padL - 4} y={padT + cellH * ri + cellH / 2 + 4} textAnchor="end" fontSize="10" fill="#64748b" fontWeight="600">
-              {row}
-            </text>
-          ))}
-          {/* Grid cells */}
-          {ROWS.map((_, ri) =>
-            COLS.map((_, ci) => {
-              const x = padL + ci * cellW;
-              const y = padT + ri * cellH;
-              const isGood = ri === 0 || ci === 0;
-              return (
-                <rect key={`${ri}-${ci}`} x={x} y={y} width={cellW} height={cellH}
-                  fill={isGood ? '#f0fdf4' : '#f8fafc'}
-                  stroke="#e2e8f0" strokeWidth="1" />
-              );
-            })
-          )}
-          {/* Policy items */}
-          {POLICY_MATRIX.map((p) => {
-            const cx = padL + p.easeCol * cellW + cellW / 2;
-            const cy = padT + p.effectRow * cellH + cellH / 2;
-            const lines = p.label.split('\n');
-            const countryName = p.country !== '—' ? COUNTRY_LABEL[p.country] ?? p.country : null;
-            return (
-              <g key={p.label}>
-                <circle cx={cx} cy={cy - (lines.length > 1 ? 14 : 8)} r={6} fill={p.color} opacity={0.9} />
-                {lines.map((line, li) => (
-                  <text key={li} x={cx} y={cy + 4 + li * 13} textAnchor="middle" fontSize="9" fill="#334155">
-                    {line}
-                  </text>
-                ))}
-                {countryName && (
-                  <text x={cx} y={cy + 4 + lines.length * 13} textAnchor="middle" fontSize="8" fill="#64748b">
-                    （{countryName}）
-                  </text>
-                )}
-              </g>
-            );
-          })}
-        </svg>
+        <table className="w-full border-collapse text-xs" style={{ minWidth: 360 }}>
+          <thead>
+            <tr>
+              <th className="w-20 border border-slate-200 bg-slate-50 px-2 py-2" />
+              {COLS.map(col => (
+                <th key={col} className="border border-slate-200 bg-slate-50 px-2 py-2 text-center font-semibold text-slate-500">
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {ROWS.map((row, ri) => (
+              <tr key={row}>
+                <td className="border border-slate-200 bg-slate-50 px-2 py-2 text-right font-semibold text-slate-500 whitespace-nowrap align-middle">
+                  {row}
+                </td>
+                {COLS.map((_, ci) => {
+                  const key = `${ri}-${ci}`;
+                  const items = cells[key] ?? [];
+                  const isGood = ri === 0 || ci === 0;
+                  return (
+                    <td key={ci}
+                      className={`border border-slate-200 px-2 py-3 align-middle ${isGood ? 'bg-emerald-50' : 'bg-slate-50'}`}
+                      style={{ minWidth: 100, minHeight: 72 }}>
+                      <div className="flex flex-col gap-2">
+                        {items.map(p => {
+                          const countryName = p.country !== '—' ? COUNTRY_LABEL[p.country] ?? p.country : null;
+                          return (
+                            <div key={p.label} className="flex items-start gap-1.5">
+                              <span className="mt-0.5 shrink-0 w-2.5 h-2.5 rounded-full"
+                                style={{ backgroundColor: p.color }} />
+                              <span className="text-slate-700 leading-tight">
+                                {p.label}
+                                {countryName && (
+                                  <span className="text-slate-400 ml-0.5">（{countryName}）</span>
+                                )}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* 凡例 */}
-      <div className="flex flex-wrap gap-3 justify-center mt-2 text-xs text-slate-500">
+      <div className="flex flex-wrap gap-3 mt-3 text-xs text-slate-500">
         <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500 mr-1 align-middle" />アイスランド</span>
         <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1 align-middle" />北欧（保育）</span>
         <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-400 mr-1 align-middle" />ドイツ・その他</span>
@@ -553,17 +555,16 @@ function PolicyMatrixChart() {
           </thead>
           <tbody>
             {POLICY_MATRIX.map((p) => {
-              const name = p.label.replace('\n', '');
               const country = p.country !== '—' ? `（${COUNTRY_LABEL[p.country] ?? p.country}）` : '';
               return (
                 <tr key={p.label} className="border-b border-slate-100 last:border-0">
                   <td className="px-3 py-2 text-slate-700 font-medium whitespace-nowrap">
                     <span className="inline-block w-2 h-2 rounded-full mr-1.5 align-middle" style={{ backgroundColor: p.color }} />
-                    {name}{country}
+                    {p.label}{country}
                   </td>
                   <td className="px-3 py-2 text-slate-500">
                     {p.cite}
-                    {p.country === '—' && p.label.includes('バイアス') && (
+                    {p.label === '無意識バイアス研修' && (
                       <span className="ml-1 text-orange-600 font-medium">（効果は限定的との注記あり）</span>
                     )}
                   </td>
