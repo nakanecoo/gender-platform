@@ -450,7 +450,7 @@ const COUNTRY_LABEL: Record<string, string> = {
   IS: 'アイスランド',
   DE: 'ドイツ',
   JP: '日本',
-  Nordic: '北欧',
+  Nordic: 'スウェーデン・フランス',
 };
 
 const POLICY_MATRIX = [
@@ -539,9 +539,10 @@ function PolicyMatrixChart() {
       {/* 凡例 */}
       <div className="flex flex-wrap gap-3 mt-3 text-xs text-slate-500">
         <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500 mr-1 align-middle" />アイスランド</span>
-        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1 align-middle" />北欧（保育）</span>
-        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-400 mr-1 align-middle" />ドイツ・その他</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1 align-middle" />スウェーデン・フランス</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-500 mr-1 align-middle" />ドイツ</span>
         <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 mr-1 align-middle" />日本</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-300 mr-1 align-middle" />参考国なし</span>
       </div>
 
       {/* 出典リスト */}
