@@ -472,7 +472,7 @@ const POLICY_MATRIX = [
 
 function PolicyMatrixChart() {
   const ROWS = ['効果：大', '効果：中', '効果：小'];
-  const COLS = ['実施しやすい', '中程度', '実施困難'];
+  const COLS = ['実施しやすい', '中程度', '日本での導入事例なし'];
 
   const cells: Record<string, typeof POLICY_MATRIX[number][]> = {};
   POLICY_MATRIX.forEach(p => {
@@ -517,10 +517,10 @@ function PolicyMatrixChart() {
                             <div key={p.label} className="flex items-start gap-1.5">
                               <span className="mt-0.5 shrink-0 w-2.5 h-2.5 rounded-full"
                                 style={{ backgroundColor: p.color }} />
-                              <span className="text-slate-700 leading-tight">
-                                {p.label}
+                              <span className="leading-tight">
+                                <span className="text-slate-700">{p.label}</span>
                                 {countryName && (
-                                  <span className="text-slate-400 ml-0.5">（{countryName}）</span>
+                                  <span className="block text-xs text-slate-400 mt-0.5">実施国：{countryName}</span>
                                 )}
                               </span>
                             </div>
@@ -625,7 +625,7 @@ function PolicySection() {
   return (
     <div>
       <SectionCard title="セクション1：エビデンスで見る施策効果マトリクス" color="border-emerald-200">
-        <p className="text-xs text-slate-500 mb-4">縦軸：効果の大きさ　横軸：実施のしやすさ（右ほど導入しやすい）</p>
+        <p className="text-xs text-slate-500 mb-4">縦軸：効果の大きさ　横軸：日本での導入状況（右ほど日本での導入が進んでいない）</p>
         <PolicyMatrixChart />
       </SectionCard>
 
