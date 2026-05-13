@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const CSP = [
   "default-src 'self'",
   // Next.js は __NEXT_DATA__ という inline script を埋め込むため unsafe-inline が必要
-  "script-src 'self' 'unsafe-inline'",
+  // 開発環境では Turbopack が eval() を使用するため unsafe-eval も許可
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
   // Tailwind CSS は style 属性を使うため unsafe-inline が必要
   "style-src 'self' 'unsafe-inline'",
   // data: は Recharts が canvas を blob 変換する場合に使用
