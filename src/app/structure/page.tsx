@@ -222,40 +222,37 @@ function IcebergDiagram({ active, onToggle }: {
         <text x="8" y="165" fontSize="10" fill="#3b82f6" fontWeight="600">水面</text>
 
         {/* Iceberg: surface zone */}
-        <path d={ICEBERG_PATH} fill={surfaceFill} clipPath="url(#clip-s)"
-          className="cursor-pointer transition-colors" style={{ transition: 'fill 0.2s' }}
-          onClick={() => toggle('surface')} />
+        <g onClick={() => toggle('surface')} style={{ cursor: 'pointer' }}>
+          <path d={ICEBERG_PATH} fill={surfaceFill} clipPath="url(#clip-s)"
+            style={{ transition: 'fill 0.2s' }} />
+          <text x="353" y="110" textAnchor="middle" fill="#1e40af" fontSize="12" fontWeight="700">【水面上】見えている現象</text>
+          <text x="353" y="126" textAnchor="middle" fill="#1e40af" fontSize="9" opacity="0.8">賃金格差・管理職比率・育休格差・DV・ひとり親貧困</text>
+          <text x="353" y="145" textAnchor="middle" fill="#3b82f6" fontSize="9">▶ クリックして詳細</text>
+        </g>
 
         {/* Iceberg: mid zone */}
-        <path d={ICEBERG_PATH} fill={midFill} clipPath="url(#clip-m)"
-          className="cursor-pointer transition-colors" style={{ transition: 'fill 0.2s' }}
-          onClick={() => toggle('institutional')} />
+        <g onClick={() => toggle('institutional')} style={{ cursor: 'pointer' }}>
+          <path d={ICEBERG_PATH} fill={midFill} clipPath="url(#clip-m)"
+            style={{ transition: 'fill 0.2s' }} />
+          <text x="353" y="234" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">【水面下】制度的固定</text>
+          <text x="353" y="250" textAnchor="middle" fill="#e0f2fe" fontSize="9" opacity="0.9">長時間労働・ケア労働の過小評価・無意識バイアス</text>
+          <text x="353" y="268" textAnchor="middle" fill="#bfdbfe" fontSize="9">▶ クリックして詳細</text>
+        </g>
 
         {/* Iceberg: deep zone */}
-        <path d={ICEBERG_PATH} fill={deepFill} clipPath="url(#clip-d)"
-          className="cursor-pointer transition-colors" style={{ transition: 'fill 0.2s' }}
-          onClick={() => toggle('norms')} />
+        <g onClick={() => toggle('norms')} style={{ cursor: 'pointer' }}>
+          <path d={ICEBERG_PATH} fill={deepFill} clipPath="url(#clip-d)"
+            style={{ transition: 'fill 0.2s' }} />
+          <text x="353" y="352" textAnchor="middle" fill="#bfdbfe" fontSize="12" fontWeight="700">【底】社会規範・歴史的背景</text>
+          <text x="353" y="368" textAnchor="middle" fill="#93c5fd" fontSize="9" opacity="0.9">性別役割規範・5レベル構造・ステレオタイプ循環</text>
+          <text x="353" y="386" textAnchor="middle" fill="#93c5fd" fontSize="9">▶ クリックして詳細</text>
+        </g>
 
         {/* Outline */}
         <path d={ICEBERG_PATH} fill="none" stroke="#93c5fd" strokeWidth="1.5" />
 
         {/* Divider between mid and deep */}
         <line x1="155" y1="318" x2="545" y2="318" stroke="#93c5fd" strokeWidth="1" strokeDasharray="6 3" opacity="0.6" />
-
-        {/* Labels – surface */}
-        <text x="353" y="110" textAnchor="middle" fill="#1e40af" fontSize="12" fontWeight="700">【水面上】見えている現象</text>
-        <text x="353" y="126" textAnchor="middle" fill="#1e40af" fontSize="9" opacity="0.8">賃金格差・管理職比率・育休格差・DV・ひとり親貧困</text>
-        <text x="353" y="145" textAnchor="middle" fill="#3b82f6" fontSize="9">▶ クリックして詳細</text>
-
-        {/* Labels – mid */}
-        <text x="353" y="234" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">【水面下】制度的固定</text>
-        <text x="353" y="250" textAnchor="middle" fill="#e0f2fe" fontSize="9" opacity="0.9">長時間労働・ケア労働の過小評価・無意識バイアス</text>
-        <text x="353" y="268" textAnchor="middle" fill="#bfdbfe" fontSize="9">▶ クリックして詳細</text>
-
-        {/* Labels – deep */}
-        <text x="353" y="352" textAnchor="middle" fill="#bfdbfe" fontSize="12" fontWeight="700">【底】社会規範・歴史的背景</text>
-        <text x="353" y="368" textAnchor="middle" fill="#93c5fd" fontSize="9" opacity="0.9">性別役割規範・5レベル構造・ステレオタイプ循環</text>
-        <text x="353" y="386" textAnchor="middle" fill="#93c5fd" fontSize="9">▶ クリックして詳細</text>
       </svg>
 
       {/* Detail panels */}

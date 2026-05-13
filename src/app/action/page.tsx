@@ -446,71 +446,139 @@ function OrgSection() {
 
 /* ─── Policy section ─── */
 
+const COUNTRY_LABEL: Record<string, string> = {
+  IS: 'アイスランド',
+  DE: 'ドイツ',
+  JP: '日本',
+  Nordic: '北欧',
+};
+
 const POLICY_MATRIX = [
-  { label: '父親クォータ制', country: '🇮🇸', effectRow: 0, easeCol: 1, color: '#6366f1' },
-  { label: '同一賃金\n認証制度', country: '🇮🇸', effectRow: 0, easeCol: 2, color: '#6366f1' },
-  { label: '保育の\n無償化・拡充', country: '🇫🇷', effectRow: 0, easeCol: 2, color: '#10b981' },
-  { label: '養育費\n強制徴収制度', country: '🇩🇪', effectRow: 0, easeCol: 1, color: '#64748b' },
-  { label: '育休開示\n義務化', country: '🇯🇵', effectRow: 1, easeCol: 0, color: '#f59e0b' },
-  { label: 'メンター\n制度', country: '—', effectRow: 1, easeCol: 1, color: '#94a3b8' },
-  { label: '無意識バイアス\n研修', country: '—', effectRow: 2, easeCol: 0, color: '#94a3b8' },
+  { label: '父親\nクォータ制', country: 'IS', effectRow: 0, easeCol: 1, color: '#6366f1',
+    cite: 'Nordic Council of Ministers, 2025' },
+  { label: '同一賃金\n認証制度', country: 'IS', effectRow: 0, easeCol: 2, color: '#6366f1',
+    cite: 'ILO, Equal Pay Laws, 2022' },
+  { label: '無償保育\n制度拡充', country: 'Nordic', effectRow: 0, easeCol: 2, color: '#10b981',
+    cite: 'OECD Family Database, 2023' },
+  { label: '養育費\n強制徴収制度', country: 'DE', effectRow: 0, easeCol: 1, color: '#64748b',
+    cite: 'OECD Family Database, 2023' },
+  { label: '育休取得率\n開示義務化', country: 'JP', effectRow: 1, easeCol: 0, color: '#f59e0b',
+    cite: '厚生労働省, 2023' },
+  { label: 'メンター\n制度', country: '—', effectRow: 1, easeCol: 1, color: '#94a3b8',
+    cite: 'ILO, 2019' },
+  { label: '無意識\nバイアス研修', country: '—', effectRow: 2, easeCol: 0, color: '#94a3b8',
+    cite: 'Equality and Human Rights Commission, 2018' },
 ];
+
+const SVG_FONT = "'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', Meiryo, sans-serif";
 
 function PolicyMatrixChart() {
   const ROWS = ['効果：大', '効果：中', '効果：小'];
   const COLS = ['実施しやすい', '中程度', '実施困難'];
-  const cellW = 160, cellH = 90;
+  const cellW = 160, cellH = 100;
   const padL = 72, padT = 36;
   const W = padL + cellW * 3 + 10;
   const H = padT + cellH * 3 + 10;
 
   return (
-    <div className="overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 420, maxHeight: 340 }}>
-        {/* Column headers */}
-        {COLS.map((col, ci) => (
-          <text key={col} x={padL + cellW * ci + cellW / 2} y={20} textAnchor="middle" fontSize="10" fill="#64748b" fontWeight="600">
-            {col}
-          </text>
-        ))}
-        {/* Row headers */}
-        {ROWS.map((row, ri) => (
-          <text key={row} x={padL - 4} y={padT + cellH * ri + cellH / 2 + 4} textAnchor="end" fontSize="10" fill="#64748b" fontWeight="600">
-            {row}
-          </text>
-        ))}
-        {/* Grid cells */}
-        {ROWS.map((_, ri) =>
-          COLS.map((_, ci) => {
-            const x = padL + ci * cellW;
-            const y = padT + ri * cellH;
-            const isGood = ri === 0 || ci === 0;
+    <div>
+      <div className="overflow-x-auto">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 420, maxHeight: 380, fontFamily: SVG_FONT }}>
+          {/* Column headers */}
+          {COLS.map((col, ci) => (
+            <text key={col} x={padL + cellW * ci + cellW / 2} y={20} textAnchor="middle" fontSize="10" fill="#64748b" fontWeight="600">
+              {col}
+            </text>
+          ))}
+          {/* Row headers */}
+          {ROWS.map((row, ri) => (
+            <text key={row} x={padL - 4} y={padT + cellH * ri + cellH / 2 + 4} textAnchor="end" fontSize="10" fill="#64748b" fontWeight="600">
+              {row}
+            </text>
+          ))}
+          {/* Grid cells */}
+          {ROWS.map((_, ri) =>
+            COLS.map((_, ci) => {
+              const x = padL + ci * cellW;
+              const y = padT + ri * cellH;
+              const isGood = ri === 0 || ci === 0;
+              return (
+                <rect key={`${ri}-${ci}`} x={x} y={y} width={cellW} height={cellH}
+                  fill={isGood ? '#f0fdf4' : '#f8fafc'}
+                  stroke="#e2e8f0" strokeWidth="1" />
+              );
+            })
+          )}
+          {/* Policy items */}
+          {POLICY_MATRIX.map((p) => {
+            const cx = padL + p.easeCol * cellW + cellW / 2;
+            const cy = padT + p.effectRow * cellH + cellH / 2;
+            const lines = p.label.split('\n');
+            const countryName = p.country !== '—' ? COUNTRY_LABEL[p.country] ?? p.country : null;
             return (
-              <rect key={`${ri}-${ci}`} x={x} y={y} width={cellW} height={cellH}
-                fill={isGood ? '#f0fdf4' : '#f8fafc'}
-                stroke="#e2e8f0" strokeWidth="1" />
+              <g key={p.label}>
+                <circle cx={cx} cy={cy - (lines.length > 1 ? 14 : 8)} r={6} fill={p.color} opacity={0.9} />
+                {lines.map((line, li) => (
+                  <text key={li} x={cx} y={cy + 4 + li * 13} textAnchor="middle" fontSize="9" fill="#334155">
+                    {line}
+                  </text>
+                ))}
+                {countryName && (
+                  <text x={cx} y={cy + 4 + lines.length * 13} textAnchor="middle" fontSize="8" fill="#64748b">
+                    （{countryName}）
+                  </text>
+                )}
+              </g>
             );
-          })
-        )}
-        {/* Policy items */}
-        {POLICY_MATRIX.map((p) => {
-          const cx = padL + p.easeCol * cellW + cellW / 2;
-          const cy = padT + p.effectRow * cellH + cellH / 2;
-          const lines = p.label.split('\n');
-          return (
-            <g key={p.label}>
-              <circle cx={cx} cy={cy - (lines.length > 1 ? 10 : 5)} r={6} fill={p.color} opacity={0.9} />
-              {lines.map((line, li) => (
-                <text key={li} x={cx} y={cy + 8 + li * 12} textAnchor="middle" fontSize="8.5" fill="#334155">
-                  {line} {li === 0 && p.country !== '—' ? p.country : ''}
-                </text>
-              ))}
-            </g>
-          );
-        })}
-      </svg>
-      <p className="text-xs text-slate-400 text-center mt-1">
-        ● 紫：アイスランド　● 緑：フランス　● 灰：ドイツ・その他　● 黄：日本
+          })}
+        </svg>
+      </div>
+
+      {/* 凡例 */}
+      <div className="flex flex-wrap gap-3 justify-center mt-2 text-xs text-slate-500">
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500 mr-1 align-middle" />アイスランド</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1 align-middle" />北欧（保育）</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-400 mr-1 align-middle" />ドイツ・その他</span>
+        <span><span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 mr-1 align-middle" />日本</span>
+      </div>
+
+      {/* 出典リスト */}
+      <div className="mt-4 border border-slate-200 rounded-xl overflow-hidden">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="bg-slate-50 border-b border-slate-200">
+              <th className="text-left px-3 py-2 font-semibold text-slate-600">施策</th>
+              <th className="text-left px-3 py-2 font-semibold text-slate-600">出典</th>
+            </tr>
+          </thead>
+          <tbody>
+            {POLICY_MATRIX.map((p) => {
+              const name = p.label.replace('\n', '');
+              const country = p.country !== '—' ? `（${COUNTRY_LABEL[p.country] ?? p.country}）` : '';
+              return (
+                <tr key={p.label} className="border-b border-slate-100 last:border-0">
+                  <td className="px-3 py-2 text-slate-700 font-medium whitespace-nowrap">
+                    <span className="inline-block w-2 h-2 rounded-full mr-1.5 align-middle" style={{ backgroundColor: p.color }} />
+                    {name}{country}
+                  </td>
+                  <td className="px-3 py-2 text-slate-500">
+                    {p.cite}
+                    {p.country === '—' && p.label.includes('バイアス') && (
+                      <span className="ml-1 text-orange-600 font-medium">（効果は限定的との注記あり）</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 注記 */}
+      <p className="mt-3 text-xs text-slate-400 leading-relaxed">
+        効果の評価は各国の実施データおよび国際機関の政策評価に基づきます。
+        実施しやすさは日本の制度・文化的文脈を考慮した評価です。
+        出典：OECD, ILO, 各国政府統計
       </p>
     </div>
   );
@@ -522,21 +590,21 @@ const JAPAN_POLICIES = [
     current: '「産後パパ育休」として2022年に創設。ただし取得率は17.1%と低く、形骸化リスクがある。',
     effect: '父親育休取得率を30%以上に引き上げると、女性の管理職比率・キャリア継続率が向上する見込み。',
     changes: '現行制度に「使わないと消失するパパ枠」を追加。職場文化の変革と組み合わせることが不可欠。',
-    model: '🇮🇸 アイスランド（2000年導入、取得率90%超）',
+    model: 'アイスランド（2000年導入、取得率90%超）',
   },
   {
     policy: '同一賃金認証制度',
     current: '日本には認証制度がなく、企業が自主的に格差是正をする仕組みがない。',
     effect: '認証を義務付けると、賃金格差を平均5〜8%縮小できるとの推計がある（ILO 2022）。',
     changes: '従業員100人超を対象に、男女別賃金の格差報告と是正計画の公開を義務化。',
-    model: '🇮🇸 アイスランド（2018年から義務化）',
+    model: 'アイスランド（2018年から義務化）',
   },
   {
     policy: '養育費の強制徴収制度',
     current: '日本では養育費を受け取れているひとり親は28.1%のみ。強制徴収の仕組みがない。',
     effect: 'ドイツ型の立替・徴収制度を導入すると、ひとり親の貧困率が大幅に改善される見込み。',
     changes: '国が養育費を立替払いし、国が未払い親から回収する制度の創設。',
-    model: '🇩🇪 ドイツ（立替制度あり）・🇸🇪 スウェーデン（強制徴収あり）',
+    model: 'ドイツ（立替制度あり）・スウェーデン（強制徴収あり）',
   },
 ];
 
