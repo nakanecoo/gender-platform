@@ -41,27 +41,62 @@ function StatGrid({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">{children}</div>;
 }
 
+/* ─── Category labeling system ─── */
+
+type Category = 'confirmed' | 'research' | 'hypothesis' | 'action';
+
+const CATEGORY_CONFIG: Record<Category, {
+  icon: string; label: string; desc: string;
+  badgeCls: string; borderColor: string; borderStyle?: 'dashed';
+}> = {
+  confirmed:  { icon: '✅', label: '確定データ', desc: '複数の研究・統計で裏付けられた事実',
+    badgeCls: 'bg-blue-50 text-blue-700 border-blue-200',           borderColor: '#3b82f6' },
+  research:   { icon: '🔬', label: '研究中',     desc: '現在も研究が進んでいる・結論が出ていない',
+    badgeCls: 'bg-orange-50 text-orange-600 border-orange-200',     borderColor: '#f97316' },
+  hypothesis: { icon: '💭', label: '仮説',       desc: '提唱されているが証明されていない考え方',
+    badgeCls: 'bg-slate-50 text-slate-500 border-slate-300',        borderColor: '#94a3b8', borderStyle: 'dashed' },
+  action:     { icon: '💡', label: '行動提案',   desc: 'エビデンスに基づく実践的な提案',
+    badgeCls: 'bg-emerald-50 text-emerald-700 border-emerald-200',  borderColor: '#10b981' },
+};
+
+function CategoryBadge({ variant }: { variant: Category }) {
+  const cfg = CATEGORY_CONFIG[variant];
+  return (
+    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full border ${cfg.badgeCls}`}>
+      {cfg.icon} {cfg.label}
+    </span>
+  );
+}
+
+function ContentBlock({ variant, children }: { variant: Category; children: React.ReactNode }) {
+  const cfg = CATEGORY_CONFIG[variant];
+  return (
+    <div className="border-l-4 pl-4 mb-4"
+      style={{ borderLeftColor: cfg.borderColor, borderLeftStyle: cfg.borderStyle ?? 'solid' }}>
+      <div className="mb-2"><CategoryBadge variant={variant} /></div>
+      {children}
+    </div>
+  );
+}
+
+const STAT_STYLES: Record<Category, { bg: string; textColor: string; inlineStyle: React.CSSProperties }> = {
+  confirmed:  { bg: 'bg-blue-50 border-blue-200',       textColor: 'text-blue-700',    inlineStyle: { borderLeftWidth: '4px', borderLeftColor: '#3b82f6' } },
+  research:   { bg: 'bg-orange-50 border-orange-200',   textColor: 'text-orange-600',  inlineStyle: { borderLeftWidth: '4px', borderLeftColor: '#f97316' } },
+  hypothesis: { bg: 'bg-slate-50 border-slate-200',     textColor: 'text-slate-500',   inlineStyle: { borderStyle: 'dashed' } },
+  action:     { bg: 'bg-emerald-50 border-emerald-200', textColor: 'text-emerald-700', inlineStyle: { borderLeftWidth: '4px', borderLeftColor: '#10b981' } },
+};
+
 function Stat({ label, value, sub, variant = 'confirmed' }: {
   label: string; value: string; sub?: string;
-  variant?: 'confirmed' | 'hypothesis' | 'research';
+  variant?: Category;
 }) {
-  const configs = {
-    confirmed:  { bg: 'bg-blue-50 border-blue-200', textColor: 'text-blue-700',   inlineStyle: { borderLeftWidth: '4px', borderLeftColor: '#3b82f6' } },
-    hypothesis: { bg: 'bg-slate-50 border-slate-200', textColor: 'text-slate-500', inlineStyle: { borderStyle: 'dashed' as const } },
-    research:   { bg: 'bg-orange-50 border-orange-200', textColor: 'text-orange-600', inlineStyle: {} },
-  };
-  const badgeLabel = { confirmed: null, hypothesis: '仮説', research: '研究中' } as const;
-  const cfg = configs[variant];
+  const cfg = STAT_STYLES[variant];
   return (
     <div className={`rounded-xl p-3 border ${cfg.bg}`} style={cfg.inlineStyle}>
+      <div className="mb-1.5"><CategoryBadge variant={variant} /></div>
       <p className="text-xs text-slate-500 mb-1 leading-tight">{label}</p>
       <p className={`text-xl font-bold ${cfg.textColor}`}>{value}</p>
       {sub && <p className="text-xs text-slate-400 mt-1">{sub}</p>}
-      {badgeLabel[variant] && (
-        <span className="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-600 border border-orange-200">
-          {badgeLabel[variant]}
-        </span>
-      )}
     </div>
   );
 }
@@ -265,6 +300,7 @@ function IcebergDiagram({ active, onToggle }: {
 function NordicParadox({ onReveal }: { onReveal: () => void }) {
   return (
     <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-5 mb-5">
+      <div className="mb-3"><CategoryBadge variant="research" /></div>
       <div className="flex items-center gap-2 mb-3">
         <span className="text-xl">⚠️</span>
         <h3 className="font-bold text-amber-900 text-base">このグラフを読む前に：データには謎があります</h3>
@@ -279,6 +315,7 @@ function NordicParadox({ onReveal }: { onReveal: () => void }) {
           { letter: 'B', title: '仮説B：バックラッシュ効果仮説', color: 'text-orange-700 bg-orange-50', body: 'ジェンダー平等が進む過程で、権力や特権を失うことへの反動として暴力が増える可能性がある。', ref: 'Gracia & Merlo「Nordic paradox」PLOS ONE 2016' },
         ].map((hyp) => (
           <div key={hyp.letter} className="bg-white rounded-xl p-4 border border-amber-200 border-dashed">
+            <div className="mb-2"><CategoryBadge variant="hypothesis" /></div>
             <p className={`text-xs font-bold mb-2 flex items-center gap-1 ${hyp.color.split(' ')[0]}`}>
               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${hyp.color}`}>{hyp.letter}</span>
               {hyp.title}
@@ -321,6 +358,7 @@ function DVInterpretation({ choice, setChoice }: { choice: DVChoice; setChoice: 
 
   return (
     <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+      <div className="mb-3"><CategoryBadge variant="research" /></div>
       <p className="font-bold text-slate-800 text-sm mb-4">GGIが高い国のDV数値が高い。あなたはこのデータをどう読みますか？</p>
       <div className="flex flex-col sm:flex-row gap-2 mb-5">
         {BTN.map(b => (
@@ -454,17 +492,25 @@ export default function StructurePage() {
         <Stat label="男女比（日本）" value="5.5倍" sub="比較国中最大" />
         <Stat label="女性が担う割合" value="84.6%" sub="11か国中最大" />
       </StatGrid>
-      <ChartUnpaidLabor />
-      <Src>内閣府男女共同参画局・OECD生活時間調査2020</Src>
+      <ContentBlock variant="confirmed">
+        <ChartUnpaidLabor />
+        <Src>内閣府男女共同参画局・OECD生活時間調査2020</Src>
+      </ContentBlock>
     </div>
   );
   const t1Why = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <Bullet>日本男性の有償労働時間はOECD平均317分に対して<strong>452分</strong>（約2時間超過）。長時間労働の構造が男性のケア参加を妨げている。</Bullet>
-        <Bullet>「男は仕事、女は家庭」という性別役割規範が依然として根強く残存している。</Bullet>
-        <Bullet>ケアの偏在は個人の選択ではなく、労働市場と規範の複合的な結果として生じている。</Bullet>
-      </ul>
+      <ContentBlock variant="confirmed">
+        <ul className="space-y-3">
+          <Bullet>日本男性の有償労働時間はOECD平均317分に対して<strong>452分</strong>（約2時間超過）。長時間労働の構造が男性のケア参加を妨げている。</Bullet>
+        </ul>
+      </ContentBlock>
+      <ContentBlock variant="research">
+        <ul className="space-y-3">
+          <Bullet>「男は仕事、女は家庭」という性別役割規範が依然として根強く残存している。</Bullet>
+          <Bullet>ケアの偏在は個人の選択ではなく、労働市場と規範の複合的な結果として生じている。</Bullet>
+        </ul>
+      </ContentBlock>
       <Src>OECD生活時間調査2020、内閣府男女共同参画白書</Src>
     </div>
   );
@@ -475,12 +521,14 @@ export default function StructurePage() {
         <span><span className="text-amber-400">★★☆</span> 複数研究で示唆</span>
         <span><span className="text-amber-400">★☆☆</span> 観察段階</span>
       </div>
-      <ul className="space-y-3 mb-4">
-        <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>父親クォータ制（育休パパ枠）</strong>：アイスランド2000年導入後、父親取得率が世界最高水準（約90%）へ。使わないと消失する設計が鍵。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男性の長時間労働の是正（労働時間規制）</strong>：男性がケアに使える時間を物理的に確保する。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>保育サービスの拡充</strong>：公的保育の整備がケア労働の社会化を促す（フランスモデル）。</span></li>
-      </ul>
-      <Src>OECD Family Database、ILO政策勧告2024</Src>
+      <ContentBlock variant="action">
+        <ul className="space-y-3">
+          <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>父親クォータ制（育休パパ枠）</strong>：アイスランド2000年導入後、父親取得率が世界最高水準（約90%）へ。使わないと消失する設計が鍵。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男性の長時間労働の是正（労働時間規制）</strong>：男性がケアに使える時間を物理的に確保する。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>保育サービスの拡充</strong>：公的保育の整備がケア労働の社会化を促す（フランスモデル）。</span></li>
+        </ul>
+        <Src>OECD Family Database、ILO政策勧告2024</Src>
+      </ContentBlock>
     </div>
   );
 
@@ -493,29 +541,39 @@ export default function StructurePage() {
         <Stat label="男性自殺死亡率（日本）" value="22.9" sub="人口10万人あたり・女性の2.2倍" />
         <Stat label="男性10〜44歳の死因第1位" value="自殺" />
       </StatGrid>
-      <p className="text-xs font-semibold text-slate-600 mb-2">8か国の男性自殺死亡率比較</p>
-      <ChartMaleSuicide />
-      <Src>内閣官房「令和5年 人々のつながりに関する基礎調査」、厚生労働省・警察庁「令和6年中における自殺の状況」、WHO 2021-2022</Src>
+      <ContentBlock variant="confirmed">
+        <p className="text-xs font-semibold text-slate-600 mb-2">8か国の男性自殺死亡率比較</p>
+        <ChartMaleSuicide />
+        <Src>内閣官房「令和5年 人々のつながりに関する基礎調査」、厚生労働省・警察庁「令和6年中における自殺の状況」、WHO 2021-2022</Src>
+      </ContentBlock>
     </div>
   );
   const t2Why = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <Bullet><strong>「男性性の規範」</strong>＝弱みを見せてはならない、感情を出してはならない、自分で解決しなければならない。この規範が助けを求めることを妨げる。</Bullet>
-        <Bullet>会社中心の人間関係が<strong>定年後に崩壊</strong>する構造。仕事以外のつながりを育む機会が少ない。</Bullet>
-        <Bullet>ケアを受けることも、ケアをすることも、男性は社会化されてこなかった。感情的つながりを作るスキルが育ちにくい。</Bullet>
-      </ul>
+      <ContentBlock variant="confirmed">
+        <ul className="space-y-3">
+          <Bullet>会社中心の人間関係が<strong>定年後に崩壊</strong>する構造。仕事以外のつながりを育む機会が少ない。</Bullet>
+        </ul>
+      </ContentBlock>
+      <ContentBlock variant="research">
+        <ul className="space-y-3">
+          <Bullet><strong>「男性性の規範」</strong>＝弱みを見せてはならない、感情を出してはならない、自分で解決しなければならない。この規範が助けを求めることを妨げる。</Bullet>
+          <Bullet>ケアを受けることも、ケアをすることも、男性は社会化されてこなかった。感情的つながりを作るスキルが育ちにくい。</Bullet>
+        </ul>
+      </ContentBlock>
       <Src>田中俊之（武蔵大学）男性学研究、内閣府孤独・孤立対策担当室資料2024</Src>
     </div>
   );
   const t2Solution = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>育児・介護への男性参加を促す制度</strong>：ケアを経験することで感情的つながりが育まれる。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男性向け相談窓口・メンタルヘルス支援の拡充</strong>：「男性だから相談しにくい」という障壁を取り除く。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>学校教育での感情表現・助けを求めるスキルの育成</strong>：幼少期から「助けを求めることは当然」と学ぶ環境作り。</span></li>
-      </ul>
-      <Src>OECD Gender Equality報告2024</Src>
+      <ContentBlock variant="action">
+        <ul className="space-y-3">
+          <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>育児・介護への男性参加を促す制度</strong>：ケアを経験することで感情的つながりが育まれる。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男性向け相談窓口・メンタルヘルス支援の拡充</strong>：「男性だから相談しにくい」という障壁を取り除く。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>学校教育での感情表現・助けを求めるスキルの育成</strong>：幼少期から「助けを求めることは当然」と学ぶ環境作り。</span></li>
+        </ul>
+        <Src>OECD Gender Equality報告2024</Src>
+      </ContentBlock>
     </div>
   );
 
@@ -523,8 +581,11 @@ export default function StructurePage() {
   const t3Data = (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
-          <p className="text-xs font-bold text-rose-700 mb-3">シングルマザー（日本）</p>
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4" style={{ borderLeftWidth: '4px', borderLeftColor: '#3b82f6' }}>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-bold text-rose-700">シングルマザー（日本）</p>
+            <CategoryBadge variant="confirmed" />
+          </div>
           {[
             ['世帯数',   '約119.5万世帯'],
             ['貧困率',   '51.4%'],
@@ -538,8 +599,11 @@ export default function StructurePage() {
             </div>
           ))}
         </div>
-        <div className="rounded-xl border border-sky-200 bg-sky-50 p-4">
-          <p className="text-xs font-bold text-sky-700 mb-3">シングルファザー（日本）</p>
+        <div className="rounded-xl border border-sky-200 bg-sky-50 p-4" style={{ borderLeftWidth: '4px', borderLeftColor: '#3b82f6' }}>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-bold text-sky-700">シングルファザー（日本）</p>
+            <CategoryBadge variant="confirmed" />
+          </div>
           {[
             ['世帯数',   '約14.9万世帯（母子の約1/8）'],
             ['貧困率',   'データ限定的（厚労省調査での対象が限定的）'],
@@ -554,29 +618,39 @@ export default function StructurePage() {
           ))}
         </div>
       </div>
-      <p className="text-xs font-semibold text-slate-600 mb-2">ひとり親世帯の相対的貧困率・国際比較</p>
-      <ChartSingleParentPoverty />
-      <Src>厚生労働省「令和3年度全国ひとり親世帯等調査」、OECD Family Database 2022</Src>
+      <ContentBlock variant="confirmed">
+        <p className="text-xs font-semibold text-slate-600 mb-2">ひとり親世帯の相対的貧困率・国際比較</p>
+        <ChartSingleParentPoverty />
+        <Src>厚生労働省「令和3年度全国ひとり親世帯等調査」、OECD Family Database 2022</Src>
+      </ContentBlock>
     </div>
   );
   const t3Why = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <Bullet>シングルマザーの貧困は「働いていないから」ではなく<strong>「働いても稼げない」</strong>構造。就業率は高いのに収入が低い。</Bullet>
-        <Bullet><strong>非正規雇用への固定・養育費未払い・保育サービス不足</strong>が複合的に作用している。</Bullet>
-        <Bullet>シングルファザーは収入面では恵まれているが、<strong>ケアの孤立と支援へのアクセス不足</strong>が課題。制度的支援の多くが母子世帯向けに設計されている。</Bullet>
-      </ul>
+      <ContentBlock variant="confirmed">
+        <ul className="space-y-3">
+          <Bullet>シングルマザーの貧困は「働いていないから」ではなく<strong>「働いても稼げない」</strong>構造。就業率は高いのに収入が低い。</Bullet>
+          <Bullet><strong>非正規雇用への固定・養育費未払い・保育サービス不足</strong>が複合的に作用している。</Bullet>
+        </ul>
+      </ContentBlock>
+      <ContentBlock variant="research">
+        <ul className="space-y-3">
+          <Bullet>シングルファザーは収入面では恵まれているが、<strong>ケアの孤立と支援へのアクセス不足</strong>が課題。制度的支援の多くが母子世帯向けに設計されている。</Bullet>
+        </ul>
+      </ContentBlock>
       <Src>龍谷大学・砂脇恵准教授研究、第一生命経済研究所2023</Src>
     </div>
   );
   const t3Solution = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>養育費の強制徴収制度</strong>（北欧・ドイツ型）：国が立替払いをし、国が回収する。日本では28%しか受け取れていない現状を変える。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>非正規から正規への転換支援</strong>：職業訓練・マッチング支援で安定雇用へ。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>父子世帯への相談支援の拡充</strong>：「母子世帯向け」制度の見直しと、感情的サポートへのアクセス改善。</span></li>
-      </ul>
-      <Src>こども家庭庁ひとり親支援資料2023</Src>
+      <ContentBlock variant="action">
+        <ul className="space-y-3">
+          <li className="flex gap-2 items-start"><Stars n={3} /><span className="text-sm text-slate-700 leading-relaxed"><strong>養育費の強制徴収制度</strong>（北欧・ドイツ型）：国が立替払いをし、国が回収する。日本では28%しか受け取れていない現状を変える。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>非正規から正規への転換支援</strong>：職業訓練・マッチング支援で安定雇用へ。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>父子世帯への相談支援の拡充</strong>：「母子世帯向け」制度の見直しと、感情的サポートへのアクセス改善。</span></li>
+        </ul>
+        <Src>こども家庭庁ひとり親支援資料2023</Src>
+      </ContentBlock>
     </div>
   );
 
@@ -588,31 +662,33 @@ export default function StructurePage() {
       ) : (
         <>
           <NordicParadox onReveal={() => setDvDataVisible(false)} />
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-800">
-            <p className="font-bold mb-1">📊 これは「DV被害を受けたことがある」と自己申告した割合を測った数字です</p>
-            <p className="text-blue-600">⚠️ この数値が低い国は、被害が少ない可能性と、言えない環境がある可能性の両方があります</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div>
-              <p className="text-xs font-semibold text-slate-600 mb-2 text-center">DV被害の種別・男女比（日本）</p>
-              <ChartDVRate />
+          <ContentBlock variant="confirmed">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-3 text-xs text-blue-800">
+              <p className="font-bold mb-1">📊 これは「DV被害を受けたことがある」と自己申告した割合を測った数字です</p>
+              <p className="text-blue-600">⚠️ この数値が低い国は、被害が少ない可能性と、言えない環境がある可能性の両方があります</p>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-600 mb-2 text-center">📊「誰にも相談しなかった」割合（日本）</p>
-              <p className="text-xs text-slate-400 mb-1 text-center">⚠️ 相談しない理由は様々（恥・恐怖・相談先を知らない等）</p>
-              <ChartNoConsult />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-xs font-semibold text-slate-600 mb-2 text-center">DV被害の種別・男女比（日本）</p>
+                <ChartDVRate />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-600 mb-2 text-center">📊「誰にも相談しなかった」割合（日本）</p>
+                <p className="text-xs text-slate-400 mb-1 text-center">⚠️ 相談しない理由は様々（恥・恐怖・相談先を知らない等）</p>
+                <ChartNoConsult />
+              </div>
             </div>
-          </div>
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 text-xs text-slate-600 mb-2">
-            <ul className="space-y-1">
-              <li>・配偶者暴力被害経験あり：女性27.5%、男性22.0%</li>
-              <li>・「何度も」被害：女性13.2%、男性7.2%</li>
-              <li>・命の危険を感じた：女性15.6%、男性7.5%</li>
-              <li>・性暴力被害経験：女性8.1%、男性0.7%</li>
-              <li className="font-semibold text-slate-700 mt-1">・誰にも相談しなかった：男性<span className="text-blue-600">57.2%</span>、女性<span className="text-rose-600">36.3%</span></li>
-            </ul>
-          </div>
-          <Src>内閣府「男女間における暴力に関する調査」令和5年度</Src>
+            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 text-xs text-slate-600 mb-2">
+              <ul className="space-y-1">
+                <li>・配偶者暴力被害経験あり：女性27.5%、男性22.0%</li>
+                <li>・「何度も」被害：女性13.2%、男性7.2%</li>
+                <li>・命の危険を感じた：女性15.6%、男性7.5%</li>
+                <li>・性暴力被害経験：女性8.1%、男性0.7%</li>
+                <li className="font-semibold text-slate-700 mt-1">・誰にも相談しなかった：男性<span className="text-blue-600">57.2%</span>、女性<span className="text-rose-600">36.3%</span></li>
+              </ul>
+            </div>
+            <Src>内閣府「男女間における暴力に関する調査」令和5年度</Src>
+          </ContentBlock>
           <DVInterpretation choice={dvChoice} setChoice={setDvChoice} />
         </>
       )}
@@ -620,22 +696,30 @@ export default function StructurePage() {
   );
   const t4Why = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <Bullet><strong>力の不均衡・支配欲求</strong>がDVの根底にある。</Bullet>
-        <Bullet>男性被害者は<strong>「男なのに被害者」という偏見</strong>から相談できない。男性の57%が相談していない。</Bullet>
-        <Bullet>相談窓口の多くが女性向けに設計されており、<strong>男性被害者の経路が少ない</strong>。</Bullet>
-      </ul>
+      <ContentBlock variant="research">
+        <ul className="space-y-3">
+          <Bullet><strong>力の不均衡・支配欲求</strong>がDVの根底にある。</Bullet>
+        </ul>
+      </ContentBlock>
+      <ContentBlock variant="confirmed">
+        <ul className="space-y-3">
+          <Bullet>男性被害者は<strong>「男なのに被害者」という偏見</strong>から相談できない。男性の57%が相談していない。</Bullet>
+          <Bullet>相談窓口の多くが女性向けに設計されており、<strong>男性被害者の経路が少ない</strong>。</Bullet>
+        </ul>
+      </ContentBlock>
       <Src>内閣府男女共同参画白書令和4年版</Src>
     </div>
   );
   const t4Solution = (
     <div>
-      <ul className="space-y-3 mb-4">
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男女ともにアクセスできる相談窓口の整備</strong>：ジェンダーニュートラルな設計。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>学校でのDV・暴力防止教育（関係性教育）</strong>：「健全な関係性とは何か」を早期から教える。</span></li>
-        <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>加害者更生プログラムの制度化</strong>：英・加・北欧の事例あり。処罰だけでなく再発防止に直結。</span></li>
-      </ul>
-      <Src>内閣府配偶者暴力対策資料2025</Src>
+      <ContentBlock variant="action">
+        <ul className="space-y-3">
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男女ともにアクセスできる相談窓口の整備</strong>：ジェンダーニュートラルな設計。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>学校でのDV・暴力防止教育（関係性教育）</strong>：「健全な関係性とは何か」を早期から教える。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>加害者更生プログラムの制度化</strong>：英・加・北欧の事例あり。処罰だけでなく再発防止に直結。</span></li>
+        </ul>
+        <Src>内閣府配偶者暴力対策資料2025</Src>
+      </ContentBlock>
     </div>
   );
 
@@ -651,18 +735,18 @@ export default function StructurePage() {
         <IcebergDiagram active={activeLayer} onToggle={setActiveLayer} />
       </section>
 
-      {/* Color legend */}
-      <div className="flex flex-wrap gap-3 mb-6 text-xs">
-        {[
-          { cls: 'bg-blue-500', label: '確定データ' },
-          { cls: 'bg-slate-400 border-dashed', label: '仮説' },
-          { cls: 'bg-orange-400', label: '研究中' },
-          { cls: 'bg-emerald-500', label: '行動提案' },
-        ].map(b => (
-          <span key={b.label} className="flex items-center gap-1.5 bg-white text-slate-600 px-3 py-1.5 rounded-full border border-slate-200">
-            <span className={`w-2 h-2 rounded-full ${b.cls} inline-block`} /> {b.label}
-          </span>
-        ))}
+      {/* Category legend */}
+      <div className="mb-8">
+        <p className="text-xs font-semibold text-slate-500 mb-3">このページのラベルについて</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {(Object.entries(CATEGORY_CONFIG) as [Category, typeof CATEGORY_CONFIG[Category]][]).map(([key, cfg]) => (
+            <div key={key} className="bg-white rounded-xl border border-slate-200 p-3 shadow-sm border-l-4"
+              style={{ borderLeftColor: cfg.borderColor, borderLeftStyle: cfg.borderStyle ?? 'solid' }}>
+              <div className="mb-1.5"><CategoryBadge variant={key} /></div>
+              <p className="text-xs text-slate-500 leading-snug">{cfg.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Topics */}
