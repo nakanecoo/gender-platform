@@ -60,8 +60,11 @@ export default function RootLayout({
                 </span>
                 <span>このサイトはCookieを使用せず、アクセス解析も行いません。</span>
               </div>
-              {/* 右：教育目的 */}
-              <span className="text-slate-400">教育・啓発目的</span>
+              {/* 右：参考文献 & 教育目的 */}
+              <div className="flex items-center gap-4">
+                <a href="/references" className="text-slate-400 hover:text-slate-600 underline underline-offset-2">参考文献一覧</a>
+                <span className="text-slate-400">教育・啓発目的</span>
+              </div>
             </div>
             <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400 text-center leading-relaxed">
               <p>

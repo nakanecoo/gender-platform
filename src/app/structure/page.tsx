@@ -561,7 +561,7 @@ export default function StructurePage() {
           <Bullet>ケアを受けることも、ケアをすることも、男性は社会化されてこなかった。感情的つながりを作るスキルが育ちにくい。</Bullet>
         </ul>
       </ContentBlock>
-      <Src>田中俊之（武蔵大学）男性学研究、内閣府孤独・孤立対策担当室資料2024</Src>
+      <Src>内閣官房孤独・孤立対策担当室「人々のつながりに関する基礎調査」令和5年（2023年）</Src>
     </div>
   );
   const t2Solution = (
@@ -638,7 +638,7 @@ export default function StructurePage() {
           <Bullet>シングルファザーは収入面では恵まれているが、<strong>ケアの孤立と支援へのアクセス不足</strong>が課題。制度的支援の多くが母子世帯向けに設計されている。</Bullet>
         </ul>
       </ContentBlock>
-      <Src>龍谷大学・砂脇恵准教授研究、第一生命経済研究所2023</Src>
+      <Src>厚生労働省「令和3年度全国ひとり親世帯等調査」</Src>
     </div>
   );
   const t3Solution = (
@@ -714,7 +714,7 @@ export default function StructurePage() {
     <div>
       <ContentBlock variant="action">
         <ul className="space-y-3">
-          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>男女ともにアクセスできる相談窓口の整備</strong>：ジェンダーニュートラルな設計。</span></li>
+          <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>ジェンダー包括的な相談窓口の整備</strong>：各性別の固有のニーズを認識した上で全員がアクセスできる設計。出典：National Resource Center on Domestic Violence (NRCDV), 2025（米国家庭内暴力防止サービス法 FVPSA に基づく）</span></li>
           <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>学校でのDV・暴力防止教育（関係性教育）</strong>：「健全な関係性とは何か」を早期から教える。</span></li>
           <li className="flex gap-2 items-start"><Stars n={2} /><span className="text-sm text-slate-700 leading-relaxed"><strong>加害者更生プログラムの制度化</strong>：英・加・北欧の事例あり。処罰だけでなく再発防止に直結。</span></li>
         </ul>
@@ -784,20 +784,23 @@ export default function StructurePage() {
         <h2 className="text-base font-bold text-slate-800 mb-4">参考文献</h2>
         <ul className="space-y-1.5 text-xs text-slate-500 leading-relaxed">
           {[
-            'WEF Global Gender Gap Report 2025',
-            'OECD生活時間国際比較調査2020',
-            '内閣府「令和5年 人々のつながりに関する基礎調査」',
+            'WEF Global Gender Gap Report 2024',
+            'OECD生活時間国際比較調査 (Time Use Database) 2020',
+            '内閣官房孤独・孤立対策担当室「人々のつながりに関する基礎調査」令和5年（2023年）',
             '厚生労働省・警察庁「令和6年中における自殺の状況」',
             '厚生労働省「令和3年度全国ひとり親世帯等調査」',
             '内閣府「男女間における暴力に関する調査」令和5年度',
-            'CEPR「The evolution of gender in the labour market」2025',
-            'ODI ALIGN Report 2024',
+            'OECD「Employment Outlook: Gender and Jobs」2023',
+            'ILO「Women in Business and Management: The business case for change」2019',
             'UNICEF Gender Policy 2022-2025',
             'UNDP Gender Social Norms Index 2023',
+            'UN Women「Progress of the World\'s Women 2019–2020」',
             'Gracia, E. & Merlo, J.「Intimate partner violence against women and the Nordic paradox」PLOS ONE 2016',
             'Gracia, E. et al.「Prevalence of intimate partner violence against women in Sweden and Spain」PLOS ONE 2019',
             'EU基本権機関（FRA）「Violence against women: an EU-wide survey」2014',
-            '田中俊之『男がつらいよ』双葉社 2015',
+            'Karpowitz, C.F., Mendelberg, T. & Shaker, L.「Gender Inequality in Deliberative Participation」American Political Science Review 2012',
+            'Equality and Human Rights Commission「Unconscious Bias Training: An Assessment of the Evidence for Effectiveness」2018',
+            'National Resource Center on Domestic Violence (NRCDV)「Gender-Responsive Services」2025',
           ].map((ref) => (
             <li key={ref} className="flex gap-2"><span className="text-slate-300 shrink-0">—</span><span>{ref}</span></li>
           ))}

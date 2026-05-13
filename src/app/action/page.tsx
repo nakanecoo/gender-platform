@@ -73,11 +73,11 @@ const CHECK_ITEMS = [
 ];
 
 const CHECK_REASONS = [
-  '女性の発言は会議で平均2.5倍遮られやすいという研究があります（HBR 2014）。意識的に注目することが第一歩です。',
-  '男性が育休を取得した家庭では、5年後の家事分担が均等化する傾向があります（OECD 2021）。まず制度を知ることが行動につながります。',
-  '担当の「見える化」と定期的な対話があると、無意識の負担偏在に気づきやすくなります（内閣府2022年調査）。',
+  '会議・審議の場で女性の発言が遮られやすい傾向は複数の研究で示されています（Karpowitz, C.F., Mendelberg, T. & Shaker, L., 2012, American Political Science Review）。意識的に注目することが第一歩です。',
+  '男性が育休を取得した家庭では、5年後の家事分担が均等化する傾向があります（OECD Family Database 2021）。まず制度を知ることが行動につながります。',
+  '担当の「見える化」と定期的な対話があると、無意識の負担偏在に気づきやすくなります（内閣府「男女共同参画白書」2022年版）。',
   '同じ感情表現でも女性は「感情的」・男性は「情熱的」と評価される傾向が複数の研究で示されています。気づきがバイアスを減らします。',
-  '助けを求められる人は燃え尽き症候群のリスクが40%低いとされています（WHO 2022）。「強がらない」ことは自分と周囲を守るスキルです。',
+  '困ったときに助けを求められる環境は精神的健康の維持に寄与する（WHO「メンタルヘルスアクションプラン 2013–2030」）。「強がらない」ことは自分と周囲を守るスキルです。',
 ];
 
 const CHECK_FEEDBACK = [
@@ -145,9 +145,22 @@ function PersonalSection({ onPerspective }: { onPerspective: (p: Perspective) =>
   const checkedCount = Object.values(checklist).filter(Boolean).length;
 
   const RESOURCES = [
-    { category: '書籍', items: ['田中俊之『男がつらいよ』双葉社', '竹信三恵子『家事労働ハラスメント』岩波新書', '浜田敬子『男性中心企業の終焉』文藝春秋'] },
-    { category: '研究・レポート', items: ['内閣府「男女共同参画白書」（毎年更新）', 'OECD Family Database（多言語）', 'WEF Global Gender Gap Report（毎年）'] },
-    { category: '相談・支援団体', items: ['よりそいホットライン（0120-279-338・24時間）', 'DV相談ナビ（#8008）', '男性相談窓口（各都道府県）'] },
+    { category: '公的統計・白書', items: [
+      '内閣府「男女共同参画白書」（毎年更新）',
+      '内閣官房孤独・孤立対策担当室「人々のつながりに関する基礎調査」令和5年（2023）',
+      '厚生労働省「雇用均等基本調査」（毎年）',
+    ]},
+    { category: '国際機関レポート', items: [
+      'WEF Global Gender Gap Report（毎年）',
+      'OECD Family Database（多言語）',
+      'ILO「Women in Business and Management」2019',
+      'UN Women「Progress of the World\'s Women」',
+    ]},
+    { category: '相談・支援', items: [
+      'よりそいホットライン（0120-279-338・24時間）',
+      'DV相談ナビ（#8008）',
+      '男性相談窓口（各都道府県）',
+    ]},
   ];
 
   return (
@@ -355,11 +368,11 @@ function OrgSection() {
     : '先進的な取り組みを他社と共有し、業界標準を引き上げることが貢献になります。';
 
   const POLICIES = [
-    { stars: 3, title: '育休取得率の公開義務（法的根拠あり）', desc: '従業員1000人超は義務（2023年〜）。1000人以下も自主公開が採用力強化につながる。', evidence: '大企業での公開後、認知度・志望者数が向上（経団連2024調査）。' },
-    { stars: 3, title: '賃金格差の定期的な自社分析と是正', desc: '男女別の基本給・賞与・昇進率を定期チェックし、差があれば原因を分析・是正する。', evidence: '英国では格差報告義務化後、企業の自発的是正が進んだ（CIPD 2023）。' },
-    { stars: 2, title: 'メンター・スポンサーシップ制度', desc: '女性管理職候補を支援するメンターを制度化。「後援者（スポンサー）」として積極的に推薦する。', evidence: 'McKinsey Women in the Workplace 2023：スポンサー付き女性は昇進率が有意に高い。' },
-    { stars: 2, title: '採用・昇進基準の透明化', desc: '評価基準を明文化・全員に共有する。曖昧な基準は無意識バイアスの温床になる。', evidence: 'HBR 2023：透明な評価基準は女性昇進率を平均15%改善。' },
-    { stars: 1, title: '無意識バイアス研修', desc: '管理職向けに半日〜1日の研修を実施。ただし研修単独では効果が限定的。他の施策との組み合わせが重要。', evidence: 'メタ分析：研修単独の効果は小さい（Atewologun et al. 2018）。制度変更と組み合わせると効果増。' },
+    { stars: 3, title: '育休取得率の公開義務（法的根拠あり）', desc: '従業員1000人超は義務（2023年〜）。1000人以下も自主公開が採用力強化につながる。', evidence: '厚生労働省「令和5年度雇用均等基本調査」（2024）：育休取得率の開示義務化後、大企業での男性取得率が上昇傾向。' },
+    { stars: 3, title: '賃金格差の定期的な自社分析と是正', desc: '男女別の基本給・賞与・昇進率を定期チェックし、差があれば原因を分析・是正する。', evidence: '英国・Government Equalities Office（2022）：賃金格差報告義務化（2017年〜）後、報告企業の格差縮小取組が広がった。' },
+    { stars: 2, title: 'メンター・スポンサーシップ制度', desc: '女性管理職候補を支援するメンターを制度化。「後援者（スポンサー）」として積極的に推薦する。', evidence: 'ILO「Women in Business and Management」2019：インフォーマルネットワークへのアクセス格差が女性昇進の障壁。メンタリング・スポンサーシップ制度による支援の重要性が報告されている。' },
+    { stars: 2, title: '採用・昇進基準の透明化', desc: '評価基準を明文化・全員に共有する。曖昧な基準は無意識バイアスの温床になる。', evidence: 'ILO「Women in Business and Management」2019：採用・昇進基準の透明化は無意識バイアスを低減し、ジェンダー平等な意思決定に寄与するとされている。' },
+    { stars: 1, title: '無意識バイアス研修', desc: '無意識バイアス研修は認知変化には一定の効果があるが、行動変容への効果は限定的とする研究もある。構造的変化（採用・昇進基準の透明化、賃金開示）と組み合わせることが重要とされている。', evidence: '出典：Equality and Human Rights Commission「Unconscious Bias Training: An Assessment of the Evidence for Effectiveness」2018' },
   ];
 
   return (
@@ -390,10 +403,10 @@ function OrgSection() {
       <SectionCard title="セクション2：取り組みの効果データ" color="border-sky-200">
         <div className="space-y-4">
           {[
-            { label: '離職率の改善', value: '育休を取りやすい職場は、そうでない職場より女性の5年後定着率が18ポイント高い（厚労省2023）。', icon: '📉' },
-            { label: '採用力の向上', value: 'ジェンダー平等への取り組みを「重視する」と答えた就活生：70%（リクルート2023調査）。', icon: '🎯' },
-            { label: '業績との相関', value: '役員の多様性が高い企業は、そうでない企業より収益性が36%高い確率（McKinsey 2020）。', icon: '📈' },
-            { label: '生産性への影響', value: '男性育休取得者のいるチームは、翌年の業務効率改善率が平均12%高い（BERD調査2022）。', icon: '⚡' },
+            { label: '離職率の改善', value: '育休を取りやすい職場は、そうでない職場より女性の5年後定着率が高い（厚生労働省「令和5年度雇用均等基本調査」2024）。', icon: '📉' },
+            { label: '採用力の向上', value: 'OECD（2023）「Employment Outlook」：ダイバーシティへの取り組みが雇用主ブランドに影響するとの調査結果が示されている。', icon: '🎯' },
+            { label: '業績との相関', value: 'ILO「Women in Business and Management」2019：管理職の男女比が均等に近い企業ほど生産性・従業員定着率が高い傾向が報告されている（相関関係、因果関係の証明ではない）。', icon: '📈' },
+            { label: '生産性への影響', value: 'OECD（2017）「The Pursuit of Gender Equality」：育児支援制度の充実が労働生産性に正の効果をもたらす傾向がある。', icon: '⚡' },
           ].map((item) => (
             <div key={item.label} className="flex gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
               <span className="text-xl shrink-0">{item.icon}</span>
